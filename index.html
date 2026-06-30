@@ -21,7 +21,7 @@
     display:flex; flex-direction:column; position:relative;}
   @media(min-width:560px){
     body{align-items:center; background:#e9eae6;}
-    .app{min-height:760px; max-height:92vh; border-radius:26px; overflow:hidden;
+    .app{min-height:780px; max-height:94vh; border-radius:26px; overflow:hidden;
       box-shadow:0 10px 40px rgba(0,0,0,.12); border:1px solid var(--line);}
   }
   header{display:flex; align-items:center; justify-content:space-between;
@@ -35,47 +35,88 @@
   .screen{display:none;} .screen.on{display:block;}
   h1{font-size:21px; font-weight:600; margin:0 0 2px;}
   .sub{font-size:13px; color:var(--muted); margin:0 0 18px;}
-  .item{display:flex; align-items:center; gap:14px; padding:15px 0; border-bottom:1px solid var(--line); cursor:pointer;}
-  .item i{font-size:21px; color:var(--muted); width:24px; text-align:center;}
-  .item span.lbl{flex:1; font-size:15px;}
-  .check{width:28px; height:28px; border-radius:50%; border:2px solid var(--line);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s;}
-  .item.done .check{background:var(--green); border-color:var(--green); color:#fff;}
-  .item.done i{color:var(--green-dark);}
-  .count{text-align:center; font-size:13px; color:var(--muted); margin:18px 0 12px;}
-  .btn{width:100%; background:var(--green); color:#fff; border:none; border-radius:12px;
-    padding:14px; font-size:15px; font-weight:600; cursor:pointer;}
-  .btn:active{transform:scale(.99);}
-  .row3{display:flex; gap:10px; margin-bottom:18px;}
+  .sech{font-size:14px; font-weight:600; margin:20px 0 10px;}
+
+  .row3{display:flex; gap:10px; margin-bottom:16px;}
   .stat{flex:1; background:var(--bg); border-radius:12px; padding:11px 12px;}
   .stat .k{font-size:12px; color:var(--muted); margin:0 0 5px;}
   .stat .v{font-size:21px; font-weight:600; margin:0;}
   .stat .v small{font-size:12px; color:var(--hint); font-weight:400;}
-  label.fld{font-size:13px; color:var(--muted); display:block; margin-bottom:7px;}
+  .stat .d{font-size:12px; color:var(--green-dark); margin:5px 0 0;}
+
+  .cta{background:var(--green-light); border-radius:12px; padding:14px 16px;
+    display:flex; align-items:center; gap:13px; margin-bottom:6px; cursor:pointer;}
+  .cta i.lead{font-size:22px; color:var(--green-dark);}
+  .cta .txt{flex:1;} .cta .txt p{margin:0; font-size:14px; font-weight:600; color:#063b30;}
+  .cta .txt small{color:var(--green-dark); font-size:12px;}
+
+  .item{display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); cursor:pointer;}
+  .item i.lead{font-size:21px; color:var(--muted); width:24px; text-align:center;}
+  .item .body{flex:1;} .item .body p{margin:0; font-size:15px;} .item .body small{color:var(--hint); font-size:12px;}
+  .check{width:28px; height:28px; border-radius:50%; border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; transition:.15s;}
+  .check i{font-size:15px; opacity:0;}
+  .item.done .check{background:var(--green); border-color:var(--green);}
+  .item.done .check i{opacity:1;}
+  .item.done i.lead{color:var(--green-dark);}
+  .count{text-align:center; font-size:13px; color:var(--muted); margin:18px 0 12px;}
+
+  .btn{width:100%; background:var(--green); color:#fff; border:none; border-radius:12px;
+    padding:14px; font-size:15px; font-weight:600; cursor:pointer;}
+  .btn:active{transform:scale(.99);}
+  .btn.alt{background:#fff; color:var(--text); border:1px solid var(--line);}
+
+  label.fld{font-size:13px; color:var(--muted); display:block; margin:0 0 7px;}
+  input[type=text],input[type=number],textarea{width:100%; border:1px solid var(--line);
+    border-radius:10px; padding:11px 12px; font-size:15px; font-family:inherit; background:#fff; color:var(--text);}
+  input:focus,textarea:focus{outline:none; border-color:var(--green);}
+  textarea{resize:vertical; min-height:78px; line-height:1.5;}
+  .two{display:flex; gap:12px;} .two>div{flex:1;}
+  .mb{margin-bottom:16px;}
+
   .drop{background:var(--bg); border:1.5px dashed #cfd1cb; border-radius:12px;
-    padding:26px 14px; text-align:center; margin-bottom:18px;}
+    padding:26px 14px; text-align:center; margin-bottom:18px; cursor:pointer; display:block;}
   .drop i{font-size:30px; color:var(--muted);}
   .drop p{margin:9px 0 2px; font-size:14px; font-weight:600;}
   .drop small{color:var(--hint); font-size:12px;}
   .slider{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
   input[type=range]{flex:1; accent-color:var(--green); height:24px;}
   .slider b{font-size:16px; font-weight:600; min-width:54px; text-align:right;}
-  .bars{display:flex; align-items:flex-end; gap:8px; height:104px; margin-bottom:6px;}
+
+  .thumbs{display:flex; gap:8px;}
+  .thumbs .th{flex:1; aspect-ratio:3/4; background:var(--bg); border-radius:8px;
+    display:flex; align-items:center; justify-content:center; color:var(--hint);}
+  .thumbs .th.now{background:var(--green-light); color:var(--green-dark);}
+
+  .bars{display:flex; align-items:flex-end; gap:8px; height:100px; margin-bottom:6px;}
   .bars div{flex:1; border-radius:5px 5px 0 0;}
-  .axis{display:flex; gap:8px; margin-bottom:18px;}
+  .axis{display:flex; gap:8px; margin-bottom:6px;}
   .axis span{flex:1; text-align:center; font-size:11px; color:var(--hint);}
-  .read{background:var(--green-light); border-radius:12px; padding:14px 16px;}
-  .read .t{font-size:12px; color:var(--green-dark); margin:0 0 6px; font-weight:600;}
-  .read p{font-size:14px; line-height:1.55; color:#063b30; margin:0;}
-  .mate{display:flex; align-items:center; gap:13px; padding:14px 0; border-bottom:1px solid var(--line);}
+
+  .goal{background:var(--bg); border-radius:12px; padding:13px 15px; margin-bottom:16px;}
+  .goal .top{display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;}
+  .goal .track{height:8px; background:#e2e4df; border-radius:6px; overflow:hidden;}
+  .goal .fill{height:100%; background:var(--green); border-radius:6px;}
+
+  .read{border-radius:12px; padding:14px 16px; margin-bottom:12px;}
+  .read.ai{background:var(--green-light);} .read.tip{background:var(--bg);}
+  .read .t{font-size:12px; margin:0 0 6px; font-weight:600; display:flex; align-items:center; gap:6px;}
+  .read.ai .t{color:var(--green-dark);} .read.tip .t{color:var(--muted);}
+  .read p{font-size:14px; line-height:1.55; margin:0;} .read.ai p{color:#063b30;}
+
+  .mate{display:flex; align-items:center; gap:13px; padding:13px 0; border-bottom:1px solid var(--line);}
   .ava{width:38px; height:38px; border-radius:50%; display:flex; align-items:center;
-    justify-content:center; font-size:14px; font-weight:600; color:var(--green-dark); background:var(--green-light);}
+    justify-content:center; font-size:14px; font-weight:600; color:var(--green-dark); background:var(--green-light); flex-shrink:0;}
   .mate .nm{flex:1;} .mate .nm p{margin:0; font-size:15px;} .mate .nm small{color:var(--hint); font-size:12px;}
   .tag{font-size:14px; color:var(--muted);} .tag.ok{color:var(--green-dark);}
+
+  .pava{width:64px; height:64px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
+    display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600;}
+
   nav{display:flex; border-top:1px solid var(--line); background:var(--card);}
-  nav button{flex:1; background:none; border:none; padding:11px 0 14px; cursor:pointer;
+  nav button{flex:1; background:none; border:none; padding:10px 0 13px; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--hint);}
-  nav button i{font-size:22px;} nav button span{font-size:11px;}
+  nav button i{font-size:21px;} nav button span{font-size:10.5px;}
   nav button.on{color:var(--green);}
   h2.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
 </style>
@@ -85,33 +126,55 @@
   <h2 class="sr">Brothers fitness accountability app prototype</h2>
   <header>
     <div class="brand"><div class="logo"><i class="ti ti-flame"></i></div><b>Brothers</b></div>
-    <span class="day">Day 38</span>
+    <span class="day">Week 6 · Day 38</span>
   </header>
 
   <main>
-    <!-- TODAY -->
-    <section class="screen on" data-screen="today">
+    <!-- HOME -->
+    <section class="screen on" data-screen="home">
+      <h1>Kia ora, Kalolo</h1>
+      <p class="sub">Your week 6 check-in is due</p>
+      <div class="row3">
+        <div class="stat"><p class="k">Weight</p><p class="v">84<small>kg</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 3kg</p></div>
+        <div class="stat"><p class="k">Waist</p><p class="v">86<small>cm</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 4cm</p></div>
+        <div class="stat"><p class="k">Today</p><p class="v" id="homeToday">0<small>/6</small></p><p class="d">check-offs</p></div>
+      </div>
+      <div class="cta" data-go="photos">
+        <i class="ti ti-camera lead"></i>
+        <div class="txt"><p>Add this week's photo</p><small>Same pose, same spot, same light</small></div>
+        <i class="ti ti-chevron-right" style="color:var(--green-dark)"></i>
+      </div>
+      <p class="sech">The crew this week</p>
+      <div class="mate"><div class="ava" style="background:#dbeafe;color:#1e40af;">K</div><div class="nm"><p>Kalolo</p><small>38 day streak</small></div><span class="tag">Due</span></div>
+      <div class="mate"><div class="ava">S</div><div class="nm"><p>Sione</p><small>38 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+      <div class="mate"><div class="ava">T</div><div class="nm"><p>Talia</p><small>37 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+      <div class="mate" style="border-bottom:none;"><div class="ava">P</div><div class="nm"><p>Peter</p><small>36 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+    </section>
+
+    <!-- DAILY -->
+    <section class="screen" data-screen="daily">
       <h1>Today's check-in</h1>
       <p class="sub">Tick what you did. Yes or no.</p>
       <div id="list">
-        <div class="item" tabindex="0"><i class="ti ti-barbell"></i><span class="lbl">Did you do your workout?</span><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item" tabindex="0"><i class="ti ti-apple"></i><span class="lbl">Did you stick to your diet?</span><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item" tabindex="0"><i class="ti ti-egg"></i><span class="lbl">Did you hit your protein?</span><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item" tabindex="0"><i class="ti ti-droplet"></i><span class="lbl">Did you drink your water?</span><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-barbell lead"></i><div class="body"><p>Workout</p><small>One session today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-egg lead"></i><div class="body"><p>Protein</p><small>Hit your target</small></div><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-droplet lead"></i><div class="body"><p>Water</p><small>3 litres through the day</small></div><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-moon lead"></i><div class="body"><p>Good sleep</p><small>7 hours or more</small></div><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-pray lead"></i><div class="body"><p>Daily prayer</p><small>Take the time</small></div><span class="check"><i class="ti ti-check"></i></span></div>
+        <div class="item"><i class="ti ti-book-2 lead"></i><div class="body"><p>Daily scripture</p><small>Read today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
       </div>
-      <p class="count" id="count">0 of 4 done today</p>
+      <p class="count" id="count">0 of 6 done today</p>
       <button class="btn" id="lock">Lock in day 38</button>
     </section>
 
-    <!-- WEEKLY -->
-    <section class="screen" data-screen="weekly">
-      <h1>Weekly form</h1>
-      <p class="sub">Week 6. Fill it in like a form.</p>
-      <label class="fld">Progress photo</label>
+    <!-- PHOTOS -->
+    <section class="screen" data-screen="photos">
+      <h1>This week's photo</h1>
+      <p class="sub">Week 6. Same pose, same spot each week.</p>
       <label class="drop" for="photo">
-        <i class="ti ti-upload"></i>
-        <p>Upload your photo</p>
-        <small>Same pose, same spot each week</small>
+        <i class="ti ti-camera-plus"></i>
+        <p>Take or upload photo</p>
+        <small>Front, side and back</small>
         <input id="photo" type="file" accept="image/*" capture="environment" hidden />
       </label>
       <label class="fld">Waist (cm)</label>
@@ -119,15 +182,27 @@
       <label class="fld">Weight (kg)</label>
       <div class="slider"><input id="weight" type="range" min="60" max="120" value="84" /><b id="weightv">84 kg</b></div>
       <button class="btn" id="save">Submit week 6</button>
+      <p class="sech">Photo timeline</p>
+      <div class="thumbs">
+        <div class="th"><i class="ti ti-user"></i></div>
+        <div class="th"><i class="ti ti-user"></i></div>
+        <div class="th"><i class="ti ti-user"></i></div>
+        <div class="th now"><i class="ti ti-user"></i></div>
+      </div>
     </section>
 
     <!-- PROGRESS -->
     <section class="screen" data-screen="progress">
       <h1>Where you're at</h1>
-      <div class="row3" style="margin-top:14px;">
+      <p class="sub">Your progress and what to do next</p>
+      <div class="row3">
         <div class="stat"><p class="k">Streak</p><p class="v">38</p></div>
         <div class="stat"><p class="k">Waist</p><p class="v">86<small>cm</small></p></div>
         <div class="stat"><p class="k">Weight</p><p class="v">84<small>kg</small></p></div>
+      </div>
+      <div class="goal">
+        <div class="top"><span>Waist goal: 82 cm</span><span>50%</span></div>
+        <div class="track"><div class="fill" style="width:50%"></div></div>
       </div>
       <label class="fld">Waist, weeks 1 to 6</label>
       <div class="bars">
@@ -139,28 +214,54 @@
         <div style="height:62%;background:#1D9E75"></div>
       </div>
       <div class="axis"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
-      <div class="read">
-        <p class="t"><i class="ti ti-chart-arcs"></i> The read</p>
-        <p>Down 4cm waist and 3kg over 6 weeks, with 38 days of check-ins. Steady and consistent. Photos line up week to week so the change is real.</p>
+      <p class="sech">Photo analysis</p>
+      <div class="read ai">
+        <p class="t"><i class="ti ti-scan"></i> What the photos show</p>
+        <p>Pose and lighting match last week, so the comparison is reliable. Midsection looks visibly tighter and shoulders sit squarer. Change is most clear from week 4 on.</p>
+      </div>
+      <div class="read tip">
+        <p class="t"><i class="ti ti-target"></i> How to reach your goal</p>
+        <p>You are halfway to your 82 cm waist goal. At this pace you will get there around week 9. Keep your 6 daily ticks, hold protein near 160 g, and add one more walk on rest days.</p>
       </div>
     </section>
 
-    <!-- CREW -->
-    <section class="screen" data-screen="crew">
-      <h1>The crew</h1>
-      <p class="sub">Today's accountability</p>
-      <div class="mate"><div class="ava" style="background:#dbeafe;color:#1e40af;">K</div><div class="nm"><p>Kalolo</p><small>38 day streak</small></div><span class="tag">2 / 4</span></div>
-      <div class="mate"><div class="ava">S</div><div class="nm"><p>Sione</p><small>38 day streak</small></div><span class="tag ok">4 / 4 <i class="ti ti-check"></i></span></div>
-      <div class="mate"><div class="ava">T</div><div class="nm"><p>Talia</p><small>37 day streak</small></div><span class="tag ok">4 / 4 <i class="ti ti-check"></i></span></div>
-      <div class="mate" style="border-bottom:none;"><div class="ava">P</div><div class="nm"><p>Peter</p><small>36 day streak</small></div><span class="tag">3 / 4</span></div>
+    <!-- PROFILE -->
+    <section class="screen" data-screen="profile">
+      <h1>Your profile</h1>
+      <p class="sub">This personalises your progress analysis</p>
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+        <div class="pava">K</div>
+        <div><p style="margin:0; font-size:17px; font-weight:600;">Kalolo</p><p style="margin:2px 0 0; font-size:13px; color:var(--muted);">Member since week 1</p></div>
+      </div>
+      <div class="mb"><label class="fld">Your why</label>
+        <textarea>Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.</textarea></div>
+      <div class="two mb">
+        <div><label class="fld">Age</label><input type="number" value="34" /></div>
+        <div><label class="fld">Height (cm)</label><input type="number" value="178" /></div>
+      </div>
+      <div class="two mb">
+        <div><label class="fld">Start weight (kg)</label><input type="number" value="87" /></div>
+        <div><label class="fld">Goal weight (kg)</label><input type="number" value="80" /></div>
+      </div>
+      <p class="sech" style="margin-top:6px;">Daily targets</p>
+      <div class="two mb">
+        <div><label class="fld">Protein (g)</label><input type="number" value="160" /></div>
+        <div><label class="fld">Water (L)</label><input type="number" value="3" /></div>
+      </div>
+      <div class="two mb">
+        <div><label class="fld">Sleep (h)</label><input type="number" value="7.5" /></div>
+        <div><label class="fld">Workouts / week</label><input type="number" value="5" /></div>
+      </div>
+      <button class="btn" id="psave">Save profile</button>
     </section>
   </main>
 
   <nav>
-    <button class="on" data-tab="today"><i class="ti ti-checkbox"></i><span>Today</span></button>
-    <button data-tab="weekly"><i class="ti ti-clipboard-text"></i><span>Weekly</span></button>
+    <button class="on" data-tab="home"><i class="ti ti-home"></i><span>Home</span></button>
+    <button data-tab="daily"><i class="ti ti-checkbox"></i><span>Daily</span></button>
+    <button data-tab="photos"><i class="ti ti-camera"></i><span>Photos</span></button>
     <button data-tab="progress"><i class="ti ti-chart-line"></i><span>Progress</span></button>
-    <button data-tab="crew"><i class="ti ti-users"></i><span>Crew</span></button>
+    <button data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
   </nav>
 </div>
 
@@ -172,14 +273,11 @@
     document.querySelector('main').scrollTop=0;
   }
   tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.tab);});});
+  document.querySelectorAll('[data-go]').forEach(function(el){el.addEventListener('click',function(){show(el.dataset.go);});});
 
-  var items=document.querySelectorAll('.item'), count=document.getElementById('count');
-  function refresh(){count.textContent=document.querySelectorAll('.item.done').length+' of 4 done today';}
-  items.forEach(function(it){
-    function toggle(){it.classList.toggle('done'); refresh();}
-    it.addEventListener('click',toggle);
-    it.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
-  });
+  var items=document.querySelectorAll('.item'), count=document.getElementById('count'), homeToday=document.getElementById('homeToday');
+  function refresh(){var d=document.querySelectorAll('.item.done').length; count.textContent=d+' of 6 done today'; homeToday.textContent=d;}
+  items.forEach(function(it){it.addEventListener('click',function(){it.classList.toggle('done'); refresh();});});
 
   var waist=document.getElementById('waist'), waistv=document.getElementById('waistv');
   waist.addEventListener('input',function(){waistv.textContent=waist.value+' cm';});
@@ -187,14 +285,12 @@
   weight.addEventListener('input',function(){weightv.textContent=weight.value+' kg';});
 
   var photo=document.getElementById('photo'), drop=document.querySelector('.drop');
-  photo.addEventListener('change',function(){
-    if(photo.files&&photo.files[0]){drop.querySelector('p').textContent='Photo added ✓'; drop.style.borderColor='#1D9E75';}
-  });
+  photo.addEventListener('change',function(){if(photo.files&&photo.files[0]){drop.querySelector('p').textContent='Photo added ✓'; drop.style.borderColor='#1D9E75';}});
 
-  var lock=document.getElementById('lock');
-  lock.addEventListener('click',function(){lock.textContent='Day 38 locked in ✓'; lock.style.background='#0F6E56';});
-  var save=document.getElementById('save');
-  save.addEventListener('click',function(){save.textContent='Week 6 submitted ✓'; save.style.background='#0F6E56';});
+  function done(btn,label){btn.textContent=label; btn.style.background='#0F6E56';}
+  document.getElementById('lock').addEventListener('click',function(){done(this,'Day 38 locked in ✓');});
+  document.getElementById('save').addEventListener('click',function(){done(this,'Week 6 submitted ✓');});
+  document.getElementById('psave').addEventListener('click',function(){done(this,'Profile saved ✓');});
 </script>
 </body>
 </html>
