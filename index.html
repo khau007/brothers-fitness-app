@@ -50,6 +50,11 @@
   .cta .txt{flex:1;} .cta .txt p{margin:0; font-size:14px; font-weight:600; color:#063b30;}
   .cta .txt small{color:var(--green-dark); font-size:12px;}
 
+  .seg{display:flex; background:var(--bg); border-radius:11px; padding:3px; gap:3px;}
+  .seg button{flex:1; border:none; background:none; padding:9px; font-size:13px;
+    border-radius:9px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:6px;}
+  .seg button.on{background:#fff; color:var(--text); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.07);}
+
   .item{display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); cursor:pointer;}
   .item i.lead{font-size:21px; color:var(--muted); width:24px; text-align:center;}
   .item .body{flex:1;} .item .body p{margin:0; font-size:15px;} .item .body small{color:var(--hint); font-size:12px;}
@@ -64,7 +69,6 @@
   .btn{width:100%; background:var(--green); color:#fff; border:none; border-radius:12px;
     padding:14px; font-size:15px; font-weight:600; cursor:pointer;}
   .btn:active{transform:scale(.99);}
-  .btn.alt{background:#fff; color:var(--text); border:1px solid var(--line);}
 
   label.fld{font-size:13px; color:var(--muted); display:block; margin:0 0 7px;}
   input[type=text],input[type=number],textarea{width:100%; border:1px solid var(--line);
@@ -75,7 +79,7 @@
   .mb{margin-bottom:16px;}
 
   .drop{background:var(--bg); border:1.5px dashed #cfd1cb; border-radius:12px;
-    padding:26px 14px; text-align:center; margin-bottom:18px; cursor:pointer; display:block;}
+    padding:24px 14px; text-align:center; margin-bottom:18px; cursor:pointer; display:block;}
   .drop i{font-size:30px; color:var(--muted);}
   .drop p{margin:9px 0 2px; font-size:14px; font-weight:600;}
   .drop small{color:var(--hint); font-size:12px;}
@@ -116,7 +120,7 @@
   nav{display:flex; border-top:1px solid var(--line); background:var(--card);}
   nav button{flex:1; background:none; border:none; padding:10px 0 13px; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--hint);}
-  nav button i{font-size:21px;} nav button span{font-size:10.5px;}
+  nav button i{font-size:21px;} nav button span{font-size:11px;}
   nav button.on{color:var(--green);}
   h2.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
 </style>
@@ -133,28 +137,43 @@
     <!-- HOME -->
     <section class="screen on" data-screen="home">
       <h1>Kia ora, Kalolo</h1>
-      <p class="sub">Your week 6 check-in is due</p>
+      <p class="sub">Your check-in is due today</p>
       <div class="row3">
         <div class="stat"><p class="k">Weight</p><p class="v">84<small>kg</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 3kg</p></div>
         <div class="stat"><p class="k">Waist</p><p class="v">86<small>cm</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 4cm</p></div>
         <div class="stat"><p class="k">Today</p><p class="v" id="homeToday">0<small>/6</small></p><p class="d">check-offs</p></div>
       </div>
-      <div class="cta" data-go="photos">
-        <i class="ti ti-camera lead"></i>
-        <div class="txt"><p>Add this week's photo</p><small>Same pose, same spot, same light</small></div>
+      <div class="cta" data-go="checkin">
+        <i class="ti ti-circle-check lead"></i>
+        <div class="txt"><p>Do today's check-in</p><small>Ticks, photo and numbers in one place</small></div>
         <i class="ti ti-chevron-right" style="color:var(--green-dark)"></i>
       </div>
       <p class="sech">The crew this week</p>
-      <div class="mate"><div class="ava" style="background:#dbeafe;color:#1e40af;">K</div><div class="nm"><p>Kalolo</p><small>38 day streak</small></div><span class="tag">Due</span></div>
-      <div class="mate"><div class="ava">S</div><div class="nm"><p>Sione</p><small>38 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
-      <div class="mate"><div class="ava">T</div><div class="nm"><p>Talia</p><small>37 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
-      <div class="mate" style="border-bottom:none;"><div class="ava">P</div><div class="nm"><p>Peter</p><small>36 day streak</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+      <div class="mate"><div class="ava" style="background:#dbeafe;color:#1e40af;">K</div><div class="nm"><p>Kalolo</p><small>38 day streak · Daily photo</small></div><span class="tag">Due</span></div>
+      <div class="mate"><div class="ava">S</div><div class="nm"><p>Sione</p><small>38 day streak · Weekly photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+      <div class="mate"><div class="ava">T</div><div class="nm"><p>Talia</p><small>37 day streak · Daily photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
+      <div class="mate" style="border-bottom:none;"><div class="ava">P</div><div class="nm"><p>Peter</p><small>36 day streak · Weekly photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
     </section>
 
-    <!-- DAILY -->
-    <section class="screen" data-screen="daily">
+    <!-- CHECK-IN (daily ticks + photo + numbers together) -->
+    <section class="screen" data-screen="checkin">
       <h1>Today's check-in</h1>
-      <p class="sub">Tick what you did. Yes or no.</p>
+      <p class="sub">Tick what you did, add your photo, log your numbers.</p>
+
+      <label class="fld">Photo frequency</label>
+      <div class="seg mb" id="cadence">
+        <button class="on" data-cad="daily"><i class="ti ti-calendar-event"></i> Daily</button>
+        <button data-cad="weekly"><i class="ti ti-calendar-week"></i> Weekly</button>
+      </div>
+
+      <label class="drop" for="photo">
+        <i class="ti ti-camera-plus"></i>
+        <p id="photoTitle">Add today's photo</p>
+        <small id="photoHint">A quick snap, same pose each time</small>
+        <input id="photo" type="file" accept="image/*" capture="environment" hidden />
+      </label>
+
+      <p class="sech" style="margin-top:4px;">Daily check-offs</p>
       <div id="list">
         <div class="item"><i class="ti ti-barbell lead"></i><div class="body"><p>Workout</p><small>One session today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
         <div class="item"><i class="ti ti-egg lead"></i><div class="body"><p>Protein</p><small>Hit your target</small></div><span class="check"><i class="ti ti-check"></i></span></div>
@@ -164,24 +183,15 @@
         <div class="item"><i class="ti ti-book-2 lead"></i><div class="body"><p>Daily scripture</p><small>Read today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
       </div>
       <p class="count" id="count">0 of 6 done today</p>
-      <button class="btn" id="lock">Lock in day 38</button>
-    </section>
 
-    <!-- PHOTOS -->
-    <section class="screen" data-screen="photos">
-      <h1>This week's photo</h1>
-      <p class="sub">Week 6. Same pose, same spot each week.</p>
-      <label class="drop" for="photo">
-        <i class="ti ti-camera-plus"></i>
-        <p>Take or upload photo</p>
-        <small>Front, side and back</small>
-        <input id="photo" type="file" accept="image/*" capture="environment" hidden />
-      </label>
+      <p class="sech" id="numTitle">Today's numbers</p>
       <label class="fld">Waist (cm)</label>
       <div class="slider"><input id="waist" type="range" min="70" max="110" value="86" /><b id="waistv">86 cm</b></div>
       <label class="fld">Weight (kg)</label>
       <div class="slider"><input id="weight" type="range" min="60" max="120" value="84" /><b id="weightv">84 kg</b></div>
-      <button class="btn" id="save">Submit week 6</button>
+
+      <button class="btn" id="save">Save check-in</button>
+
       <p class="sech">Photo timeline</p>
       <div class="thumbs">
         <div class="th"><i class="ti ti-user"></i></div>
@@ -235,6 +245,11 @@
       </div>
       <div class="mb"><label class="fld">Your why</label>
         <textarea>Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.</textarea></div>
+      <label class="fld">Photo frequency</label>
+      <div class="seg mb" id="cadence2">
+        <button class="on" data-cad="daily"><i class="ti ti-calendar-event"></i> Daily</button>
+        <button data-cad="weekly"><i class="ti ti-calendar-week"></i> Weekly</button>
+      </div>
       <div class="two mb">
         <div><label class="fld">Age</label><input type="number" value="34" /></div>
         <div><label class="fld">Height (cm)</label><input type="number" value="178" /></div>
@@ -258,8 +273,7 @@
 
   <nav>
     <button class="on" data-tab="home"><i class="ti ti-home"></i><span>Home</span></button>
-    <button data-tab="daily"><i class="ti ti-checkbox"></i><span>Daily</span></button>
-    <button data-tab="photos"><i class="ti ti-camera"></i><span>Photos</span></button>
+    <button data-tab="checkin"><i class="ti ti-circle-check"></i><span>Check-in</span></button>
     <button data-tab="progress"><i class="ti ti-chart-line"></i><span>Progress</span></button>
     <button data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
   </nav>
@@ -275,8 +289,17 @@
   tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.tab);});});
   document.querySelectorAll('[data-go]').forEach(function(el){el.addEventListener('click',function(){show(el.dataset.go);});});
 
+  // photo cadence toggle (daily vs weekly), kept in sync across check-in and profile
+  var photoTitle=document.getElementById('photoTitle'), photoHint=document.getElementById('photoHint'), numTitle=document.getElementById('numTitle');
+  function setCadence(cad){
+    document.querySelectorAll('[id^=cadence] button').forEach(function(b){b.classList.toggle('on', b.dataset.cad===cad);});
+    if(cad==='daily'){ photoTitle.textContent='Add today’s photo'; photoHint.textContent='A quick snap, same pose each time'; numTitle.textContent='Today’s numbers'; }
+    else { photoTitle.textContent='Add this week’s photo'; photoHint.textContent='Same pose, same spot · due Sunday'; numTitle.textContent='This week’s numbers'; }
+  }
+  document.querySelectorAll('[id^=cadence] button').forEach(function(b){b.addEventListener('click',function(){setCadence(b.dataset.cad);});});
+
   var items=document.querySelectorAll('.item'), count=document.getElementById('count'), homeToday=document.getElementById('homeToday');
-  function refresh(){var d=document.querySelectorAll('.item.done').length; count.textContent=d+' of 6 done today'; homeToday.textContent=d;}
+  function refresh(){var d=document.querySelectorAll('.item.done').length; count.textContent=d+' of 6 done today'; homeToday.innerHTML=d+'<small>/6</small>';}
   items.forEach(function(it){it.addEventListener('click',function(){it.classList.toggle('done'); refresh();});});
 
   var waist=document.getElementById('waist'), waistv=document.getElementById('waistv');
@@ -285,11 +308,10 @@
   weight.addEventListener('input',function(){weightv.textContent=weight.value+' kg';});
 
   var photo=document.getElementById('photo'), drop=document.querySelector('.drop');
-  photo.addEventListener('change',function(){if(photo.files&&photo.files[0]){drop.querySelector('p').textContent='Photo added ✓'; drop.style.borderColor='#1D9E75';}});
+  photo.addEventListener('change',function(){if(photo.files&&photo.files[0]){photoTitle.textContent='Photo added ✓'; drop.style.borderColor='#1D9E75';}});
 
   function done(btn,label){btn.textContent=label; btn.style.background='#0F6E56';}
-  document.getElementById('lock').addEventListener('click',function(){done(this,'Day 38 locked in ✓');});
-  document.getElementById('save').addEventListener('click',function(){done(this,'Week 6 submitted ✓');});
+  document.getElementById('save').addEventListener('click',function(){done(this,'Check-in saved ✓');});
   document.getElementById('psave').addEventListener('click',function(){done(this,'Profile saved ✓');});
 </script>
 </body>
