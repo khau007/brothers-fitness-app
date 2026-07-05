@@ -8,6 +8,7 @@
 <style>
   :root{
     --green:#1D9E75; --green-dark:#0F6E56; --green-light:#E1F5EE;
+    --blue:#3a86d4; --amber:#EF9F27; --coral:#D85A30;
     --bg:#f5f6f4; --card:#ffffff; --line:#e7e8e4;
     --text:#1b1c1a; --muted:#6f716b; --hint:#a0a29c;
   }
@@ -73,14 +74,22 @@
   .btn{width:100%; background:var(--green); color:#fff; border:none; border-radius:12px;
     padding:14px; font-size:15px; font-weight:600; cursor:pointer;}
   .btn:active{transform:scale(.99);}
+  .btn.ghost{background:#fff; color:var(--green-dark); border:1px solid var(--green); padding:11px;}
 
   label.fld{font-size:13px; color:var(--muted); display:block; margin:0 0 7px;}
   input[type=text],input[type=number],textarea{width:100%; border:1px solid var(--line);
     border-radius:10px; padding:11px 12px; font-size:15px; font-family:inherit; background:#fff; color:var(--text);}
   input:focus,textarea:focus{outline:none; border-color:var(--green);}
   textarea{resize:vertical; min-height:74px; line-height:1.5;}
-  .two{display:flex; gap:12px;} .two>div{flex:1;}
+  .two{display:flex; gap:12px;} .two>div{flex:1;} .three{display:flex; gap:10px;} .three>div{flex:1;}
   .mb{margin-bottom:16px;}
+
+  .numfield{display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line);
+    border-radius:12px; padding:8px 14px; margin-bottom:14px;}
+  .numfield label{font-size:14px; color:var(--muted);}
+  .numfield .val{display:flex; align-items:baseline; gap:4px;}
+  .numfield input{width:96px; text-align:right; font-size:22px; font-weight:600; border:none; padding:4px 0;}
+  .numfield .u{font-size:13px; color:var(--hint);}
 
   .seg{display:flex; background:var(--bg); border-radius:11px; padding:3px; gap:3px;}
   .seg button{flex:1; border:none; background:none; padding:9px; font-size:13px;
@@ -93,19 +102,16 @@
   .drop p{margin:9px 0 2px; font-size:14px; font-weight:600;}
   .drop small{color:var(--hint); font-size:12px;}
   .drop img{max-width:100%; border-radius:8px; display:block; margin:0 auto;}
-  .slider{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
-  input[type=range]{flex:1; accent-color:var(--green); height:24px;}
-  .slider b{font-size:16px; font-weight:600; min-width:54px; text-align:right;}
 
   .thumbs{display:flex; gap:8px;}
   .thumbs .th{flex:1; aspect-ratio:3/4; background:var(--bg); border-radius:8px; overflow:hidden;
     display:flex; align-items:center; justify-content:center; color:var(--hint);}
   .thumbs .th img{width:100%; height:100%; object-fit:cover;}
 
-  .bars{display:flex; align-items:flex-end; gap:8px; height:90px; margin-bottom:6px;}
-  .bars div{flex:1; border-radius:5px 5px 0 0; min-height:6px;}
-  .axis{display:flex; gap:8px; margin-bottom:6px;}
-  .axis span{flex:1; text-align:center; font-size:11px; color:var(--hint);}
+  .goal{background:var(--bg); border-radius:12px; padding:13px 15px; margin-bottom:16px;}
+  .goal .top{display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;}
+  .goal .track{height:8px; background:#e2e4df; border-radius:6px; overflow:hidden;}
+  .goal .fill{height:100%; background:var(--green); border-radius:6px;}
 
   .chart{border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px;}
   .chart .ch-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;}
@@ -114,22 +120,26 @@
   .grid75{display:grid; grid-template-columns:repeat(15,1fr); gap:5px; margin-top:4px;}
   .grid75 .cell{aspect-ratio:1; border-radius:3px; background:var(--bg);}
   .grid75 .cell.done{background:var(--green);}
+  .grid75 .cell.partly{background:var(--blue);}
   .grid75 .cell.miss{background:#e6b8b8;}
-  .grid75 .cell.today{outline:2px solid var(--green); outline-offset:-1px;}
-  .glegend{display:flex; gap:14px; font-size:11px; color:var(--muted); margin-top:10px; flex-wrap:wrap;}
+  .grid75 .cell.today{outline:2px solid var(--green-dark); outline-offset:-1px;}
+  .glegend{display:flex; gap:12px; font-size:11px; color:var(--muted); margin-top:10px; flex-wrap:wrap;}
   .glegend span{display:flex; align-items:center; gap:5px;}
   .glegend i{width:10px; height:10px; border-radius:2px; display:inline-block;}
-
-  .goal{background:var(--bg); border-radius:12px; padding:13px 15px; margin-bottom:16px;}
-  .goal .top{display:flex; justify-content:space-between; font-size:13px; margin-bottom:8px;}
-  .goal .track{height:8px; background:#e2e4df; border-radius:6px; overflow:hidden;}
-  .goal .fill{height:100%; background:var(--green); border-radius:6px;}
 
   .bmi{border:1px solid var(--line); border-radius:14px; padding:15px 16px; margin-bottom:12px;}
   .bmiread{display:flex; align-items:baseline; gap:10px; margin:12px 0 6px;}
   .bmiread .n{font-size:30px; font-weight:600;}
   .bmiread .cat{font-size:13px; font-weight:600; padding:3px 10px; border-radius:20px;}
   .bmiline{font-size:13px; color:var(--muted); line-height:1.5; margin:6px 0 0;}
+
+  .macros{border:1px solid var(--line); border-radius:14px; padding:15px 16px; margin-bottom:16px;}
+  .kcal{display:flex; align-items:baseline; gap:8px; margin:12px 0 10px;}
+  .kcal .n{font-size:26px; font-weight:600;} .kcal .u{font-size:13px; color:var(--muted);}
+  .mbar{display:flex; height:12px; border-radius:6px; overflow:hidden; margin-bottom:6px; background:var(--bg);}
+  .mbar span{display:block; height:100%;}
+  .mkey{display:flex; gap:14px; font-size:12px; color:var(--muted); margin-bottom:14px; flex-wrap:wrap;}
+  .mkey span{display:flex; align-items:center; gap:5px;} .mkey i{width:10px; height:10px; border-radius:2px;}
 
   .read{border-radius:12px; padding:14px 16px; margin-bottom:12px;}
   .read.ai{background:var(--green-light);} .read.tip{background:var(--bg);}
@@ -181,10 +191,11 @@
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M18 15.5A7.5 7.5 0 0 1 8.5 6 7.5 7.5 0 1 0 18 15.5z"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 4l1.7 6.3L20 12l-6.3 1.7L12 20l-1.7-6.3L4 12l6.3-1.7z"/></symbol>
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5h6a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H5z"/><path d="M19 5.5h-6a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h6z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 1 4 10.5c-.6.6-1 1.3-1 2.1H9c0-.8-.4-1.5-1-2.1A6 6 0 0 1 12 3z"/></symbol>
 </svg>
 
 <div class="app">
-  <h2 class="sr">75 Hard accountability app for the brothers, with a daily checklist, photo and measurement check-in, progress insights and profile.</h2>
+  <h2 class="sr">75 Hard accountability app for the brothers, with a daily checklist, photo and measurement check-in, a dashboard, macros and profile.</h2>
   <header>
     <div class="brand"><div class="logo"><svg class="ic"><use href="#i-flame"/></svg></div><b>75 Hard · The Boys</b></div>
     <span class="daybadge" id="dayBadge">Day 1</span>
@@ -232,10 +243,8 @@
       </label>
 
       <p class="sech" id="numTitle" style="margin-top:4px;">Today's numbers</p>
-      <label class="fld">Waist (cm)</label>
-      <div class="slider"><input id="waist" type="range" min="60" max="130" value="86" /><b id="waistv">86 cm</b></div>
-      <label class="fld">Weight (kg)</label>
-      <div class="slider"><input id="weight" type="range" min="50" max="160" value="84" /><b id="weightv">84 kg</b></div>
+      <div class="numfield"><label>Weight</label><div class="val"><input id="weight" type="number" step="0.1" inputmode="decimal" value="84" /><span class="u">kg</span></div></div>
+      <div class="numfield"><label>Waist</label><div class="val"><input id="waist" type="number" step="0.1" inputmode="decimal" value="86" /><span class="u">cm</span></div></div>
 
       <button class="btn" id="save">Save check-in</button>
 
@@ -271,18 +280,20 @@
       <div class="chart">
         <div class="ch-top"><b>75 day grid</b><span style="font-size:12px; color:var(--muted);" id="gridCount">0 done</span></div>
         <div class="grid75" id="grid75"></div>
-        <div class="glegend"><span><i style="background:var(--green)"></i> All 6 done</span><span><i style="background:#e6b8b8"></i> Missed</span><span><i style="background:var(--bg)"></i> To come</span></div>
+        <div class="glegend"><span><i style="background:var(--green)"></i> All 6</span><span><i style="background:var(--blue)"></i> Partly</span><span><i style="background:#e6b8b8"></i> Missed</span><span><i style="background:var(--bg)"></i> To come</span></div>
       </div>
 
       <div class="bmi">
         <b style="font-size:15px;">BMI and healthy weight</b>
+        <p class="bmiline" style="margin-top:2px;">Adjusted for Pacific and Māori build</p>
         <div class="two" style="margin-top:12px;">
-          <div><label class="fld">Height (cm)</label><input type="number" id="bH" value="178" /></div>
-          <div><label class="fld">Weight (kg)</label><input type="number" id="bW" value="84" /></div>
+          <div><label class="fld">Height (cm)</label><input type="number" id="bH" step="0.1" value="178" /></div>
+          <div><label class="fld">Weight (kg)</label><input type="number" id="bW" step="0.1" value="84" /></div>
         </div>
         <div class="bmiread"><span class="n" id="bmiN">0</span><span class="cat" id="bmiCat">—</span></div>
         <p class="bmiline" id="bmiRange"></p>
-        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> BMI reads high if you carry muscle, so treat your waist trend as the truer guide.</p>
+        <p class="bmiline" id="whtr"></p>
+        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> These use the higher BMI cut-offs NZ health guidance applies for Pacific and Māori peoples, who carry more muscle. Waist-to-height is the fairer guide, aim under 0.5.</p>
       </div>
 
       <p class="sech">Photo analysis</p>
@@ -308,17 +319,29 @@
         <textarea id="pWhy">Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.</textarea></div>
       <div class="two mb">
         <div><label class="fld">Age</label><input type="number" id="pAge" value="34" /></div>
-        <div><label class="fld">Height (cm)</label><input type="number" id="pHeight" value="178" /></div>
+        <div><label class="fld">Height (cm)</label><input type="number" id="pHeight" step="0.1" value="178" /></div>
       </div>
       <div class="two mb">
-        <div><label class="fld">Start weight (kg)</label><input type="number" id="pStart" value="87" /></div>
-        <div><label class="fld">Goal weight (kg)</label><input type="number" id="pGoal" value="80" /></div>
+        <div><label class="fld">Start weight (kg)</label><input type="number" id="pStart" step="0.1" value="87" /></div>
+        <div><label class="fld">Goal weight (kg)</label><input type="number" id="pGoal" step="0.1" value="80" /></div>
       </div>
-      <p class="sech" style="margin-top:6px;">Daily targets</p>
-      <div class="two mb">
-        <div><label class="fld">Protein (g)</label><input type="number" id="pProtein" value="160" /></div>
-        <div><label class="fld">Water (L)</label><input type="number" id="pWater" value="3" /></div>
+
+      <p class="sech" style="margin-top:6px;">Macros and water</p>
+      <div class="macros">
+        <div class="three">
+          <div><label class="fld">Protein (g)</label><input type="number" id="pProtein" value="160" /></div>
+          <div><label class="fld">Carbs (g)</label><input type="number" id="pCarbs" value="180" /></div>
+          <div><label class="fld">Fats (g)</label><input type="number" id="pFats" value="60" /></div>
+        </div>
+        <div class="kcal"><span class="n" id="mKcal">0</span><span class="u">kcal per day (auto from your macros)</span></div>
+        <div class="mbar" id="mBar"></div>
+        <div class="mkey"><span><i style="background:var(--green)"></i> Protein</span><span><i style="background:var(--amber)"></i> Carbs</span><span><i style="background:var(--coral)"></i> Fats</span></div>
+        <div class="two" style="align-items:flex-end;">
+          <div><label class="fld">Water target (L)</label><input type="number" id="pWater" step="0.1" value="3" /></div>
+          <div><button class="btn ghost" id="mSuggest"><svg class="ic ic-s"><use href="#i-bulb"/></svg> Suggest for me</button></div>
+        </div>
       </div>
+
       <button class="btn" id="psave">Save profile</button>
 
       <p class="sech">The crew</p>
@@ -330,13 +353,14 @@
   <nav>
     <button class="on" data-tab="home"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
     <button data-tab="checkin"><svg class="ic"><use href="#i-check-c"/></svg><span>Check-in</span></button>
-    <button data-tab="progress"><svg class="ic"><use href="#i-chart"/></svg><span>Progress</span></button>
+    <button data-tab="progress"><svg class="ic"><use href="#i-chart"/></svg><span>Dashboard</span></button>
     <button data-tab="profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
   </nav>
 </div>
 
 <script>
   function ic(name, cls){ return '<svg class="ic'+(cls?' '+cls:'')+'"><use href="#'+name+'"/></svg>'; }
+  function r1(n){ return Math.round(n*10)/10; }
   var TASKS = [
     ['i-barbell','Workout','One session today'],
     ['i-bolt','Protein','Hit your target'],
@@ -382,15 +406,18 @@
 
   var KEY = 'brothers75v1';
   function todayStr(){ var n=new Date(); return n.getFullYear()+'-'+('0'+(n.getMonth()+1)).slice(-2)+'-'+('0'+n.getDate()).slice(-2); }
+  function fmtDate(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
   function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
   var state = load();
-  if(!state.profile) state.profile = {name:'Kalolo', why:'Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.', age:34, height:178, start:87, goal:80, goalWaist:82, protein:160, water:3, cadence:'daily', avatar:null};
+  if(!state.profile) state.profile = {name:'Kalolo', why:'Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.', age:34, height:178, start:87, goal:80, goalWaist:82, protein:160, carbs:180, fats:60, water:3, cadence:'daily', avatar:null};
+  if(state.profile.carbs===undefined) state.profile.carbs=180;
+  if(state.profile.fats===undefined) state.profile.fats=60;
   if(!state.history) state.history = [];
   if(!state.today || state.today.date !== todayStr()){
     var last = state.history[state.history.length-1] || {};
-    state.today = {date: todayStr(), tasks:[false,false,false,false,false,false], waist: last.waist||86, weight: last.weight||state.profile.start||84, photo:null};
+    state.today = {date: todayStr(), tasks:[false,false,false,false,false,false], waist: last.waist||state.profile.goalWaist||90, weight: last.weight||state.profile.start||84, photo:null};
   }
   save();
 
@@ -435,13 +462,13 @@
     var done=state.today.tasks.filter(Boolean).length;
     var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo};
     var h=state.history; if(h.length && h[h.length-1].date===state.today.date) h[h.length-1]=rec; else h.push(rec);
-    if(h.length>60) h.shift();
+    if(h.length>90) h.shift();
   }
   function streak(){
     var days={}; state.history.forEach(function(r){ days[r.date]= r.done>=6; });
     if(state.today.tasks.filter(Boolean).length>=6) days[state.today.date]=true;
     var s=0, d=new Date();
-    for(var k=0;k<100;k++){
+    for(var k=0;k<120;k++){
       var ds=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
       if(days[ds]) s++; else if(k>0) break;
       d.setDate(d.getDate()-1);
@@ -452,19 +479,16 @@
   function renderHome(){
     document.getElementById('greeting').textContent = 'Kia ora, '+(state.profile.name||'brother');
     var w=state.today.weight, start=Number(state.profile.start)||w;
-    document.getElementById('hWeight').innerHTML = w+'<small>kg</small>';
-    var dw = Math.round((start-w)*10)/10;
+    document.getElementById('hWeight').innerHTML = r1(w)+'<small>kg</small>';
+    var dw = r1(start-w);
     document.getElementById('hWeightD').innerHTML = dw>0 ? ic('i-arrow-dr','ic-s')+' '+dw+'kg' : '&nbsp;';
-    document.getElementById('hWaist').innerHTML = state.today.waist+'<small>cm</small>';
+    document.getElementById('hWaist').innerHTML = r1(state.today.waist)+'<small>cm</small>';
     document.getElementById('hWaistD').innerHTML = 'goal '+(state.profile.goalWaist||82)+'cm';
   }
 
-  var waist=document.getElementById('waist'), waistv=document.getElementById('waistv');
-  var weight=document.getElementById('weight'), weightv=document.getElementById('weightv');
-  waist.value=state.today.waist; waistv.textContent=state.today.waist+' cm';
-  weight.value=state.today.weight; weightv.textContent=state.today.weight+' kg';
-  waist.addEventListener('input',function(){ waistv.textContent=waist.value+' cm'; });
-  weight.addEventListener('input',function(){ weightv.textContent=weight.value+' kg'; });
+  var waistI=document.getElementById('waist'), weightI=document.getElementById('weight');
+  function syncNumbers(){ weightI.value=state.today.weight; waistI.value=state.today.waist; }
+  syncNumbers();
 
   var photoTitle=document.getElementById('photoTitle'), numTitle=document.getElementById('numTitle');
   function setCad(c){ document.querySelectorAll('#cadence button').forEach(function(b){b.classList.toggle('on', b.dataset.cad===c);});
@@ -496,7 +520,7 @@
   }
 
   document.getElementById('save').addEventListener('click',function(){
-    state.today.waist=Number(waist.value); state.today.weight=Number(weight.value); upsertHistory(); save();
+    state.today.weight=Number(weightI.value)||state.today.weight; state.today.waist=Number(waistI.value)||state.today.waist; upsertHistory(); save();
     renderHome(); renderProgress();
     this.textContent='Check-in saved ✓'; this.style.background='#0F6E56';
     var b=this; setTimeout(function(){ b.textContent='Save check-in'; b.style.background=''; }, 1600);
@@ -505,19 +529,22 @@
   var bH=document.getElementById('bH'), bW=document.getElementById('bW');
   function bmiCalc(){
     var h=Number(bH.value)/100, w=Number(bW.value); if(!h||!w) return;
-    var bmi=Math.round(w/(h*h)*10)/10, cat, col, bg;
+    var bmi=r1(w/(h*h)), cat, col, bg;
     if(bmi<18.5){cat='Underweight'; col='#854F0B'; bg='#FAEEDA';}
-    else if(bmi<25){cat='Healthy'; col='#0F6E56'; bg='#E1F5EE';}
-    else if(bmi<30){cat='Overweight'; col='#854F0B'; bg='#FAEEDA';}
+    else if(bmi<26){cat='Healthy'; col='#0F6E56'; bg='#E1F5EE';}
+    else if(bmi<32){cat='Overweight'; col='#854F0B'; bg='#FAEEDA';}
     else {cat='Obese'; col='#A32D2D'; bg='#FCEBEB';}
     document.getElementById('bmiN').textContent=bmi;
     var c=document.getElementById('bmiCat'); c.textContent=cat; c.style.color=col; c.style.background=bg;
-    var lo=Math.round(18.5*h*h), hi=Math.round(24.9*h*h);
+    var lo=Math.round(18.5*h*h), hi=Math.round(25.9*h*h);
     document.getElementById('bmiRange').textContent='Healthy weight for your height is about '+lo+' to '+hi+' kg.';
+    var waistCm=Number(waistI.value)||state.today.waist, ratio=r1(waistCm/Number(bH.value)*100)/100;
+    var rr=Math.round(waistCm/Number(bH.value)*100)/100;
+    var rstat = rr<0.5?'healthy':(rr<0.6?'increased risk':'high risk');
+    document.getElementById('whtr').textContent='Waist-to-height ratio '+rr.toFixed(2)+' · '+rstat+'.';
   }
   bH.addEventListener('input',bmiCalc); bW.addEventListener('input',bmiCalc);
 
-  function fmtDate(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
   function lineChart(recs, key){
     if(recs.length<2) return '<div class="empty">Your trend appears here after a couple of check-ins</div>';
     var W=320,H=110,pad=16, n=recs.length;
@@ -531,20 +558,20 @@
       +'<path d="'+area+'" fill="#1D9E7522"/>'
       +'<path d="'+line+'" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
       +dots
-      +'<text x="'+pad+'" y="11" font-size="10" fill="#a0a29c">'+Math.round(mx*10)/10+'</text>'
-      +'<text x="'+pad+'" y="'+(H-3)+'" font-size="10" fill="#a0a29c">'+Math.round(mn*10)/10+'</text>'
+      +'<text x="'+pad+'" y="11" font-size="10" fill="#a0a29c">'+r1(mx)+'</text>'
+      +'<text x="'+pad+'" y="'+(H-3)+'" font-size="10" fill="#a0a29c">'+r1(mn)+'</text>'
       +'</svg>';
   }
   function renderProgress(){
     bH.value=state.profile.height||178; bW.value=state.today.weight; bmiCalc();
     var start=Number(state.profile.start)||state.today.weight, goal=Number(state.profile.goal)||start, cur=state.today.weight;
     var pct = start===goal?0:Math.max(0,Math.min(100, Math.round((start-cur)/(start-goal)*100)));
-    document.getElementById('goalLabel').textContent='Weight goal: '+goal+' kg';
+    document.getElementById('goalLabel').textContent='Weight goal: '+r1(goal)+' kg';
     document.getElementById('goalPct').textContent=pct+'%';
     document.getElementById('goalFill').style.width=pct+'%';
     document.getElementById('goalTip').textContent = pct<=0
       ? 'Log your check-ins daily. Hold protein near '+(state.profile.protein||160)+' g and water at '+(state.profile.water||3)+' L, and you will see the waist move first.'
-      : 'You are '+pct+'% to your '+goal+' kg goal. Keep the 6 daily ticks, protein near '+(state.profile.protein||160)+' g, and add one extra walk on rest days.';
+      : 'You are '+pct+'% to your '+r1(goal)+' kg goal. Keep the 6 daily ticks, protein near '+(state.profile.protein||160)+' g, and add one extra walk on rest days.';
     var todayDone=state.today.tasks.filter(Boolean).length;
     var hist = state.history.length && state.history[state.history.length-1].date===state.today.date ? state.history.slice() : state.history.concat([{date:state.today.date, waist:state.today.waist, weight:state.today.weight, done:todayDone}]);
     var doneDays=hist.filter(function(r){return r.done>=6;}).length;
@@ -552,8 +579,8 @@
     document.getElementById('dStreak').textContent=streak();
     document.getElementById('dDone').innerHTML=doneDays+'<small>/75</small>';
     document.getElementById('dPct').innerHTML=(hist.length?Math.round(totalTicks/(hist.length*6)*100):0)+'<small>%</small>';
-    document.getElementById('wNow').textContent=state.today.weight+' kg';
-    document.getElementById('waNow').textContent=state.today.waist+' cm';
+    document.getElementById('wNow').textContent=r1(state.today.weight)+' kg';
+    document.getElementById('waNow').textContent=r1(state.today.waist)+' cm';
     var last=hist.slice(-10);
     document.getElementById('weightChart').innerHTML=lineChart(last,'weight');
     document.getElementById('waistChart').innerHTML=lineChart(last,'waist');
@@ -562,29 +589,57 @@
     var g=document.getElementById('grid75'); g.innerHTML=''; var gd=0;
     for(var d=1; d<=75; d++){
       var cell=document.createElement('div'); cell.className='cell';
-      var dt=new Date(2026,6,6); dt.setDate(dt.getDate()+(d-1)); var ds=fmtDate(dt);
+      var dt=new Date(2026,6,6); dt.setDate(dt.getDate()+(d-1)); var ds=fmtDate(dt); var v=byDate[ds];
       if(d===curDay) cell.className+=' today';
-      if(byDate[ds]!==undefined){ if(byDate[ds]>=6){cell.className+=' done'; gd++;} else if(d<curDay){cell.className+=' miss';} }
-      else if(d<curDay){ cell.className+=' miss'; }
+      if(v>=6){cell.className+=' done'; gd++;}
+      else if(v>=1){cell.className+=' partly';}
+      else if(d<curDay){cell.className+=' miss';}
       g.appendChild(cell);
     }
     document.getElementById('gridCount').textContent=gd+' done';
   }
 
   var P=state.profile;
-  document.getElementById('pName').value=P.name; document.getElementById('pWhy').value=P.why;
-  document.getElementById('pAge').value=P.age; document.getElementById('pHeight').value=P.height;
-  document.getElementById('pStart').value=P.start; document.getElementById('pGoal').value=P.goal;
-  document.getElementById('pProtein').value=P.protein; document.getElementById('pWater').value=P.water;
+  var pName=document.getElementById('pName'), pWhy=document.getElementById('pWhy'), pAge=document.getElementById('pAge'),
+      pHeight=document.getElementById('pHeight'), pStart=document.getElementById('pStart'), pGoal=document.getElementById('pGoal'),
+      pProtein=document.getElementById('pProtein'), pCarbs=document.getElementById('pCarbs'), pFats=document.getElementById('pFats'), pWater=document.getElementById('pWater');
+  pName.value=P.name; pWhy.value=P.why; pAge.value=P.age; pHeight.value=P.height;
+  pStart.value=P.start; pGoal.value=P.goal; pProtein.value=P.protein; pCarbs.value=P.carbs; pFats.value=P.fats; pWater.value=P.water;
+
+  function updateMacros(){
+    var p=Number(pProtein.value)||0, c=Number(pCarbs.value)||0, f=Number(pFats.value)||0;
+    var pc=p*4, cc=c*4, fc=f*9, tot=pc+cc+fc;
+    document.getElementById('mKcal').textContent=Math.round(tot);
+    var t=tot||1;
+    document.getElementById('mBar').innerHTML='<span style="width:'+(pc/t*100)+'%; background:var(--green)"></span>'
+      +'<span style="width:'+(cc/t*100)+'%; background:var(--amber)"></span>'
+      +'<span style="width:'+(fc/t*100)+'%; background:var(--coral)"></span>';
+  }
+  [pProtein,pCarbs,pFats].forEach(function(el){el.addEventListener('input',updateMacros);});
+  updateMacros();
+
+  document.getElementById('mSuggest').addEventListener('click',function(){
+    var age=Number(pAge.value)||30, h=Number(pHeight.value)||175, wt=state.today.weight||Number(pStart.value)||80;
+    var startW=Number(pStart.value)||wt, goalW=Number(pGoal.value)||wt;
+    var bmr=10*wt + 6.25*h - 5*age + 5;
+    var cal=bmr*1.45; if(goalW<startW) cal=cal-500; cal=Math.max(cal, bmr*1.2);
+    var protein=Math.round(2.0*goalW), fats=Math.round(0.9*goalW);
+    var carbs=Math.max(0, Math.round((cal - protein*4 - fats*9)/4));
+    pProtein.value=protein; pCarbs.value=carbs; pFats.value=fats; updateMacros();
+    this.textContent='Suggested ✓ · adjust to your plan';
+    var b=this; setTimeout(function(){ b.innerHTML=ic('i-bulb','ic-s')+' Suggest for me'; }, 2200);
+  });
+
   function renderAvatar(){ var el=document.getElementById('pavaInner'); if(P.avatar) el.outerHTML='<img id="pavaInner" src="'+P.avatar+'" alt="Your photo"/>'; else el.textContent=(P.name||'K').charAt(0); }
   renderAvatar();
   document.getElementById('avatar').addEventListener('change',function(){ if(this.files&&this.files[0]) scaleImg(this.files[0],200,function(url){ P.avatar=url; save(); renderAvatar(); }); });
+
   document.getElementById('psave').addEventListener('click',function(){
-    P.name=document.getElementById('pName').value; P.why=document.getElementById('pWhy').value;
-    P.age=+document.getElementById('pAge').value; P.height=+document.getElementById('pHeight').value;
-    P.start=+document.getElementById('pStart').value; P.goal=+document.getElementById('pGoal').value;
-    P.protein=+document.getElementById('pProtein').value; P.water=+document.getElementById('pWater').value;
-    save(); renderHome(); renderProgress();
+    P.name=pName.value; P.why=pWhy.value; P.age=+pAge.value; P.height=+pHeight.value;
+    P.start=+pStart.value; P.goal=+pGoal.value;
+    P.protein=+pProtein.value; P.carbs=+pCarbs.value; P.fats=+pFats.value; P.water=+pWater.value;
+    if(state.history.length===0){ state.today.weight=P.start||state.today.weight; }
+    save(); syncNumbers(); renderHome(); renderProgress();
     this.textContent='Profile saved ✓'; this.style.background='#0F6E56';
     var b=this; setTimeout(function(){ b.textContent='Save profile'; b.style.background=''; }, 1600);
   });
