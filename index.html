@@ -4,9 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#1D9E75" />
-<title>Brothers — accountability app</title>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.3.0/tabler-icons.min.css" />
+<title>75 Hard — The Boys</title>
 <style>
   :root{
     --green:#1D9E75; --green-dark:#0F6E56; --green-light:#E1F5EE;
@@ -21,21 +19,31 @@
     display:flex; flex-direction:column; position:relative;}
   @media(min-width:560px){
     body{align-items:center; background:#e9eae6;}
-    .app{min-height:780px; max-height:94vh; border-radius:26px; overflow:hidden;
+    .app{min-height:800px; max-height:95vh; border-radius:26px; overflow:hidden;
       box-shadow:0 10px 40px rgba(0,0,0,.12); border:1px solid var(--line);}
   }
+  .ic{display:inline-block; vertical-align:-0.18em; fill:none; stroke:currentColor;
+    stroke-width:2; stroke-linecap:round; stroke-linejoin:round; width:20px; height:20px;}
+  .ic-s{width:15px; height:15px; vertical-align:-0.14em;}
   header{display:flex; align-items:center; justify-content:space-between;
     padding:16px 20px 12px; border-bottom:1px solid var(--line);}
   .brand{display:flex; align-items:center; gap:9px;}
-  .logo{width:30px; height:30px; border-radius:8px; background:var(--green);
-    display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px;}
+  .logo{width:30px; height:30px; border-radius:8px; background:var(--green); color:#fff;
+    display:flex; align-items:center; justify-content:center;}
+  .logo .ic{width:18px; height:18px;}
   .brand b{font-size:16px; font-weight:600;}
-  .day{font-size:13px; color:var(--hint);}
+  .daybadge{font-size:12px; font-weight:600; color:var(--green-dark); background:var(--green-light);
+    padding:5px 10px; border-radius:20px;}
   main{flex:1; overflow-y:auto; padding:18px 20px 24px;}
   .screen{display:none;} .screen.on{display:block;}
   h1{font-size:21px; font-weight:600; margin:0 0 2px;}
   .sub{font-size:13px; color:var(--muted); margin:0 0 18px;}
-  .sech{font-size:14px; font-weight:600; margin:20px 0 10px;}
+  .sech{font-size:14px; font-weight:600; margin:22px 0 10px;}
+
+  .quote{background:var(--green-dark); color:#eafff6; border-radius:14px; padding:16px 18px; margin-bottom:18px;}
+  .quote .why{font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#8fe6c9; margin:0 0 8px;}
+  .quote .q{font-size:15px; line-height:1.5; margin:0 0 8px;}
+  .quote .a{font-size:12px; color:#a8ecd3; margin:0;}
 
   .row3{display:flex; gap:10px; margin-bottom:16px;}
   .stat{flex:1; background:var(--bg); border-radius:12px; padding:11px 12px;}
@@ -44,27 +52,23 @@
   .stat .v small{font-size:12px; color:var(--hint); font-weight:400;}
   .stat .d{font-size:12px; color:var(--green-dark); margin:5px 0 0;}
 
-  .cta{background:var(--green-light); border-radius:12px; padding:14px 16px;
-    display:flex; align-items:center; gap:13px; margin-bottom:6px; cursor:pointer;}
-  .cta i.lead{font-size:22px; color:var(--green-dark);}
-  .cta .txt{flex:1;} .cta .txt p{margin:0; font-size:14px; font-weight:600; color:#063b30;}
-  .cta .txt small{color:var(--green-dark); font-size:12px;}
+  .widget{border:1px solid var(--line); border-radius:14px; padding:6px 16px 8px; margin-bottom:8px;}
+  .wtop{display:flex; align-items:center; justify-content:space-between; padding:12px 0 10px;}
+  .wtop b{font-size:15px;} .wtop .c{font-size:13px; color:var(--muted);}
+  .prog{height:7px; background:var(--bg); border-radius:6px; overflow:hidden; margin:0 0 4px;}
+  .prog span{display:block; height:100%; background:var(--green); width:0; transition:.25s;}
 
-  .seg{display:flex; background:var(--bg); border-radius:11px; padding:3px; gap:3px;}
-  .seg button{flex:1; border:none; background:none; padding:9px; font-size:13px;
-    border-radius:9px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:6px;}
-  .seg button.on{background:#fff; color:var(--text); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.07);}
-
-  .item{display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); cursor:pointer;}
-  .item i.lead{font-size:21px; color:var(--muted); width:24px; text-align:center;}
+  .item{display:flex; align-items:center; gap:14px; padding:13px 0; border-top:1px solid var(--line); cursor:pointer;}
+  .item .lead{width:22px; height:22px; color:var(--muted); flex-shrink:0;}
   .item .body{flex:1;} .item .body p{margin:0; font-size:15px;} .item .body small{color:var(--hint); font-size:12px;}
-  .check{width:28px; height:28px; border-radius:50%; border:2px solid var(--line);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; transition:.15s;}
-  .check i{font-size:15px; opacity:0;}
+  .check{width:28px; height:28px; border-radius:50%; border:2px solid var(--line); color:#fff;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:.15s;}
+  .check .ic{width:17px; height:17px; stroke-width:3; opacity:0;}
+  .item.done{background:var(--green-light); margin:0 -14px; padding:13px 14px; border-radius:10px; border-top-color:transparent;}
+  .item.done + .item{border-top-color:transparent;}
   .item.done .check{background:var(--green); border-color:var(--green);}
-  .item.done .check i{opacity:1;}
-  .item.done i.lead{color:var(--green-dark);}
-  .count{text-align:center; font-size:13px; color:var(--muted); margin:18px 0 12px;}
+  .item.done .check .ic{opacity:1;}
+  .item.done .lead{color:var(--green-dark);} .item.done .body p{color:var(--green-dark); font-weight:600;}
 
   .btn{width:100%; background:var(--green); color:#fff; border:none; border-radius:12px;
     padding:14px; font-size:15px; font-weight:600; cursor:pointer;}
@@ -74,26 +78,32 @@
   input[type=text],input[type=number],textarea{width:100%; border:1px solid var(--line);
     border-radius:10px; padding:11px 12px; font-size:15px; font-family:inherit; background:#fff; color:var(--text);}
   input:focus,textarea:focus{outline:none; border-color:var(--green);}
-  textarea{resize:vertical; min-height:78px; line-height:1.5;}
+  textarea{resize:vertical; min-height:74px; line-height:1.5;}
   .two{display:flex; gap:12px;} .two>div{flex:1;}
   .mb{margin-bottom:16px;}
 
+  .seg{display:flex; background:var(--bg); border-radius:11px; padding:3px; gap:3px;}
+  .seg button{flex:1; border:none; background:none; padding:9px; font-size:13px;
+    border-radius:9px; cursor:pointer; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:6px;}
+  .seg button.on{background:#fff; color:var(--text); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.07);}
+
   .drop{background:var(--bg); border:1.5px dashed #cfd1cb; border-radius:12px;
-    padding:24px 14px; text-align:center; margin-bottom:18px; cursor:pointer; display:block;}
-  .drop i{font-size:30px; color:var(--muted);}
+    padding:22px 14px; text-align:center; margin-bottom:18px; cursor:pointer; display:block; overflow:hidden;}
+  .drop .ic{width:30px; height:30px; color:var(--muted);}
   .drop p{margin:9px 0 2px; font-size:14px; font-weight:600;}
   .drop small{color:var(--hint); font-size:12px;}
+  .drop img{max-width:100%; border-radius:8px; display:block; margin:0 auto;}
   .slider{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
   input[type=range]{flex:1; accent-color:var(--green); height:24px;}
   .slider b{font-size:16px; font-weight:600; min-width:54px; text-align:right;}
 
   .thumbs{display:flex; gap:8px;}
-  .thumbs .th{flex:1; aspect-ratio:3/4; background:var(--bg); border-radius:8px;
+  .thumbs .th{flex:1; aspect-ratio:3/4; background:var(--bg); border-radius:8px; overflow:hidden;
     display:flex; align-items:center; justify-content:center; color:var(--hint);}
-  .thumbs .th.now{background:var(--green-light); color:var(--green-dark);}
+  .thumbs .th img{width:100%; height:100%; object-fit:cover;}
 
-  .bars{display:flex; align-items:flex-end; gap:8px; height:100px; margin-bottom:6px;}
-  .bars div{flex:1; border-radius:5px 5px 0 0;}
+  .bars{display:flex; align-items:flex-end; gap:8px; height:90px; margin-bottom:6px;}
+  .bars div{flex:1; border-radius:5px 5px 0 0; min-height:6px;}
   .axis{display:flex; gap:8px; margin-bottom:6px;}
   .axis span{flex:1; text-align:center; font-size:11px; color:var(--hint);}
 
@@ -102,217 +112,422 @@
   .goal .track{height:8px; background:#e2e4df; border-radius:6px; overflow:hidden;}
   .goal .fill{height:100%; background:var(--green); border-radius:6px;}
 
+  .bmi{border:1px solid var(--line); border-radius:14px; padding:15px 16px; margin-bottom:12px;}
+  .bmiread{display:flex; align-items:baseline; gap:10px; margin:12px 0 6px;}
+  .bmiread .n{font-size:30px; font-weight:600;}
+  .bmiread .cat{font-size:13px; font-weight:600; padding:3px 10px; border-radius:20px;}
+  .bmiline{font-size:13px; color:var(--muted); line-height:1.5; margin:6px 0 0;}
+
   .read{border-radius:12px; padding:14px 16px; margin-bottom:12px;}
   .read.ai{background:var(--green-light);} .read.tip{background:var(--bg);}
   .read .t{font-size:12px; margin:0 0 6px; font-weight:600; display:flex; align-items:center; gap:6px;}
   .read.ai .t{color:var(--green-dark);} .read.tip .t{color:var(--muted);}
   .read p{font-size:14px; line-height:1.55; margin:0;} .read.ai p{color:#063b30;}
 
-  .mate{display:flex; align-items:center; gap:13px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .mate{display:flex; align-items:center; gap:13px; padding:12px 0; border-bottom:1px solid var(--line);}
   .ava{width:38px; height:38px; border-radius:50%; display:flex; align-items:center;
     justify-content:center; font-size:14px; font-weight:600; color:var(--green-dark); background:var(--green-light); flex-shrink:0;}
   .mate .nm{flex:1;} .mate .nm p{margin:0; font-size:15px;} .mate .nm small{color:var(--hint); font-size:12px;}
-  .tag{font-size:14px; color:var(--muted);} .tag.ok{color:var(--green-dark);}
+  .note{font-size:12px; color:var(--muted); background:var(--bg); border-radius:10px; padding:10px 12px; margin-bottom:14px; line-height:1.5; display:flex; gap:8px; align-items:flex-start;}
+  .note .ic{color:var(--muted); flex-shrink:0; margin-top:1px;}
 
-  .pava{width:64px; height:64px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
-    display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600;}
+  .pava{width:72px; height:72px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
+    display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:600; overflow:hidden; cursor:pointer; position:relative; flex-shrink:0;}
+  .pava img{width:100%; height:100%; object-fit:cover;}
+  .pava .edit{position:absolute; bottom:0; right:0; width:24px; height:24px; border-radius:50%; background:var(--green); color:#fff; display:flex; align-items:center; justify-content:center; border:2px solid #fff;}
+  .pava .edit .ic{width:13px; height:13px;}
 
   nav{display:flex; border-top:1px solid var(--line); background:var(--card);}
   nav button{flex:1; background:none; border:none; padding:10px 0 13px; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:4px; color:var(--hint);}
-  nav button i{font-size:21px;} nav button span{font-size:11px;}
+  nav button .ic{width:22px; height:22px;} nav button span{font-size:11px;}
   nav button.on{color:var(--green);}
   h2.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1.6 3 4.5 4.6 4.5 8.5a4.5 4.5 0 0 1-9 0c0-1.6.6-2.7 1.6-3.6.1 1.7 1 2.5 1.8 2.7-.4-2.7.1-5.1 1.1-7.6z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6 8 6"/><path d="M6 10v9h5v-5h2v5h5v-9"/></symbol>
+  <symbol id="i-check-c" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><polyline points="7 14 11 10 14 13 19 7"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c0-3.6 3-5.5 6.5-5.5s6.5 1.9 6.5 5.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="5 12.5 10 17.5 19 6.5"/></symbol>
+  <symbol id="i-arrow-dr" viewBox="0 0 24 24"><line x1="7" y1="7" x2="16" y2="16"/><polyline points="16 9 16 16 9 16"/></symbol>
+  <symbol id="i-camera-plus" viewBox="0 0 24 24"><path d="M4 9a1 1 0 0 1 1-1h2.5l1.2-2h6.6l1.2 2H19a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><line x1="12" y1="11.5" x2="12" y2="16.5"/><line x1="9.5" y1="14" x2="14.5" y2="14"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 9a1 1 0 0 1 1-1h2.5l1.2-2h6.6l1.2 2H19a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><circle cx="12" cy="14" r="3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><line x1="4" y1="9.5" x2="20" y2="9.5"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><circle cx="12" cy="14" r="1"/></symbol>
+  <symbol id="i-cal-week" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><line x1="4" y1="9.5" x2="20" y2="9.5"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="8" y1="14" x2="16" y2="14"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12" y2="8"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.2"/><path d="M3.5 19c0-3.2 2.5-4.8 5.5-4.8s5.5 1.6 5.5 4.8"/><path d="M16 6.3a3 3 0 0 1 0 5.4"/><path d="M17.5 19c0-2.3-1-3.7-2.4-4.5"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8V6.5A2.5 2.5 0 0 1 6.5 4H8"/><path d="M20 8V6.5A2.5 2.5 0 0 0 17.5 4H16"/><path d="M4 16v1.5A2.5 2.5 0 0 0 6.5 20H8"/><path d="M20 16v1.5A2.5 2.5 0 0 1 17.5 20H16"/><line x1="4" y1="12" x2="20" y2="12"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="12" x2="12" y2="12"/></symbol>
+  <symbol id="i-barbell" viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="8" x2="4" y2="16"/><line x1="7" y1="9.5" x2="7" y2="14.5"/><line x1="20" y1="8" x2="20" y2="16"/><line x1="17" y1="9.5" x2="17" y2="14.5"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><polyline points="13 3 5 13.5 11 13.5 10.5 21 19 10 12.5 10 13 3"/></symbol>
+  <symbol id="i-droplet" viewBox="0 0 24 24"><path d="M12 3.5c2.8 3.6 5 6 5 9.2a5 5 0 0 1-10 0c0-3.2 2.2-5.6 5-9.2z"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M18 15.5A7.5 7.5 0 0 1 8.5 6 7.5 7.5 0 1 0 18 15.5z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 4l1.7 6.3L20 12l-6.3 1.7L12 20l-1.7-6.3L4 12l6.3-1.7z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5h6a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H5z"/><path d="M19 5.5h-6a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h6z"/></symbol>
+</svg>
+
 <div class="app">
-  <h2 class="sr">Brothers fitness accountability app prototype</h2>
+  <h2 class="sr">75 Hard accountability app for the brothers, with a daily checklist, photo and measurement check-in, progress insights and profile.</h2>
   <header>
-    <div class="brand"><div class="logo"><i class="ti ti-flame"></i></div><b>Brothers</b></div>
-    <span class="day">Week 6 · Day 38</span>
+    <div class="brand"><div class="logo"><svg class="ic"><use href="#i-flame"/></svg></div><b>75 Hard · The Boys</b></div>
+    <span class="daybadge" id="dayBadge">Day 1</span>
   </header>
 
   <main>
     <!-- HOME -->
     <section class="screen on" data-screen="home">
-      <h1>Kia ora, Kalolo</h1>
-      <p class="sub">Your check-in is due today</p>
+      <h1 id="greeting">Kia ora</h1>
+      <p class="sub" id="homeSub">Let's get today done</p>
+
+      <div class="quote">
+        <p class="why">Our why · body transformation, together</p>
+        <p class="q" id="qText"></p>
+        <p class="a" id="qAuthor"></p>
+      </div>
+
       <div class="row3">
-        <div class="stat"><p class="k">Weight</p><p class="v">84<small>kg</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 3kg</p></div>
-        <div class="stat"><p class="k">Waist</p><p class="v">86<small>cm</small></p><p class="d"><i class="ti ti-arrow-down-right"></i> 4cm</p></div>
-        <div class="stat"><p class="k">Today</p><p class="v" id="homeToday">0<small>/6</small></p><p class="d">check-offs</p></div>
+        <div class="stat"><p class="k">Weight</p><p class="v" id="hWeight">—</p><p class="d" id="hWeightD">&nbsp;</p></div>
+        <div class="stat"><p class="k">Waist</p><p class="v" id="hWaist">—</p><p class="d" id="hWaistD">&nbsp;</p></div>
+        <div class="stat"><p class="k">Streak</p><p class="v" id="hStreak">0</p><p class="d">days</p></div>
       </div>
-      <div class="cta" data-go="checkin">
-        <i class="ti ti-circle-check lead"></i>
-        <div class="txt"><p>Do today's check-in</p><small>Ticks, photo and numbers in one place</small></div>
-        <i class="ti ti-chevron-right" style="color:var(--green-dark)"></i>
+
+      <div class="widget">
+        <div class="wtop"><b>Today's checklist</b><span class="c" id="taskCount">0 of 6</span></div>
+        <div class="prog"><span id="taskBar"></span></div>
+        <div id="homeList"></div>
       </div>
-      <p class="sech">The crew this week</p>
-      <div class="mate"><div class="ava" style="background:#dbeafe;color:#1e40af;">K</div><div class="nm"><p>Kalolo</p><small>38 day streak · Daily photo</small></div><span class="tag">Due</span></div>
-      <div class="mate"><div class="ava">S</div><div class="nm"><p>Sione</p><small>38 day streak · Weekly photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
-      <div class="mate"><div class="ava">T</div><div class="nm"><p>Talia</p><small>37 day streak · Daily photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
-      <div class="mate" style="border-bottom:none;"><div class="ava">P</div><div class="nm"><p>Peter</p><small>36 day streak · Weekly photo</small></div><span class="tag ok"><i class="ti ti-check"></i> Done</span></div>
     </section>
 
-    <!-- CHECK-IN (daily ticks + photo + numbers together) -->
+    <!-- CHECK-IN -->
     <section class="screen" data-screen="checkin">
-      <h1>Today's check-in</h1>
-      <p class="sub">Tick what you did, add your photo, log your numbers.</p>
+      <h1>Check-in</h1>
+      <p class="sub">Add your photo and log your numbers.</p>
 
       <label class="fld">Photo frequency</label>
       <div class="seg mb" id="cadence">
-        <button class="on" data-cad="daily"><i class="ti ti-calendar-event"></i> Daily</button>
-        <button data-cad="weekly"><i class="ti ti-calendar-week"></i> Weekly</button>
+        <button class="on" data-cad="daily"><svg class="ic ic-s"><use href="#i-cal"/></svg> Daily</button>
+        <button data-cad="weekly"><svg class="ic ic-s"><use href="#i-cal-week"/></svg> Weekly</button>
       </div>
 
       <label class="drop" for="photo">
-        <i class="ti ti-camera-plus"></i>
-        <p id="photoTitle">Add today's photo</p>
-        <small id="photoHint">A quick snap, same pose each time</small>
+        <span id="dropInner"><svg class="ic"><use href="#i-camera-plus"/></svg><p id="photoTitle">Add today's photo</p><small id="photoHint">Same pose, same spot each time. Stays private to you.</small></span>
         <input id="photo" type="file" accept="image/*" capture="environment" hidden />
       </label>
 
-      <p class="sech" style="margin-top:4px;">Daily check-offs</p>
-      <div id="list">
-        <div class="item"><i class="ti ti-barbell lead"></i><div class="body"><p>Workout</p><small>One session today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item"><i class="ti ti-egg lead"></i><div class="body"><p>Protein</p><small>Hit your target</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item"><i class="ti ti-droplet lead"></i><div class="body"><p>Water</p><small>3 litres through the day</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item"><i class="ti ti-moon lead"></i><div class="body"><p>Good sleep</p><small>7 hours or more</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item"><i class="ti ti-pray lead"></i><div class="body"><p>Daily prayer</p><small>Take the time</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-        <div class="item"><i class="ti ti-book-2 lead"></i><div class="body"><p>Daily scripture</p><small>Read today</small></div><span class="check"><i class="ti ti-check"></i></span></div>
-      </div>
-      <p class="count" id="count">0 of 6 done today</p>
-
-      <p class="sech" id="numTitle">Today's numbers</p>
+      <p class="sech" id="numTitle" style="margin-top:4px;">Today's numbers</p>
       <label class="fld">Waist (cm)</label>
-      <div class="slider"><input id="waist" type="range" min="70" max="110" value="86" /><b id="waistv">86 cm</b></div>
+      <div class="slider"><input id="waist" type="range" min="60" max="130" value="86" /><b id="waistv">86 cm</b></div>
       <label class="fld">Weight (kg)</label>
-      <div class="slider"><input id="weight" type="range" min="60" max="120" value="84" /><b id="weightv">84 kg</b></div>
+      <div class="slider"><input id="weight" type="range" min="50" max="160" value="84" /><b id="weightv">84 kg</b></div>
 
       <button class="btn" id="save">Save check-in</button>
 
-      <p class="sech">Photo timeline</p>
-      <div class="thumbs">
-        <div class="th"><i class="ti ti-user"></i></div>
-        <div class="th"><i class="ti ti-user"></i></div>
-        <div class="th"><i class="ti ti-user"></i></div>
-        <div class="th now"><i class="ti ti-user"></i></div>
-      </div>
+      <p class="sech">Your photo timeline</p>
+      <div class="thumbs" id="timeline"></div>
     </section>
 
     <!-- PROGRESS -->
     <section class="screen" data-screen="progress">
       <h1>Where you're at</h1>
-      <p class="sub">Your progress and what to do next</p>
-      <div class="row3">
-        <div class="stat"><p class="k">Streak</p><p class="v">38</p></div>
-        <div class="stat"><p class="k">Waist</p><p class="v">86<small>cm</small></p></div>
-        <div class="stat"><p class="k">Weight</p><p class="v">84<small>kg</small></p></div>
-      </div>
+      <p class="sub">Your numbers, insights and what to do next</p>
+
       <div class="goal">
-        <div class="top"><span>Waist goal: 82 cm</span><span>50%</span></div>
-        <div class="track"><div class="fill" style="width:50%"></div></div>
+        <div class="top"><span id="goalLabel">Weight goal</span><span id="goalPct">0%</span></div>
+        <div class="track"><div class="fill" id="goalFill" style="width:0%"></div></div>
       </div>
-      <label class="fld">Waist, weeks 1 to 6</label>
-      <div class="bars">
-        <div style="height:100%;background:#9FE1CB"></div>
-        <div style="height:92%;background:#9FE1CB"></div>
-        <div style="height:85%;background:#5DCAA5"></div>
-        <div style="height:78%;background:#5DCAA5"></div>
-        <div style="height:70%;background:#1D9E75"></div>
-        <div style="height:62%;background:#1D9E75"></div>
+
+      <div class="bmi">
+        <b style="font-size:15px;">BMI and healthy weight</b>
+        <div class="two" style="margin-top:12px;">
+          <div><label class="fld">Height (cm)</label><input type="number" id="bH" value="178" /></div>
+          <div><label class="fld">Weight (kg)</label><input type="number" id="bW" value="84" /></div>
+        </div>
+        <div class="bmiread"><span class="n" id="bmiN">0</span><span class="cat" id="bmiCat">—</span></div>
+        <p class="bmiline" id="bmiRange"></p>
+        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> BMI reads high if you carry muscle, so treat your waist trend as the truer guide.</p>
       </div>
-      <div class="axis"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
+
+      <label class="fld" style="margin-top:6px;">Waist trend</label>
+      <div class="bars" id="waistBars"></div>
+      <div class="axis" id="waistAxis"></div>
+
       <p class="sech">Photo analysis</p>
       <div class="read ai">
-        <p class="t"><i class="ti ti-scan"></i> What the photos show</p>
-        <p>Pose and lighting match last week, so the comparison is reliable. Midsection looks visibly tighter and shoulders sit squarer. Change is most clear from week 4 on.</p>
+        <p class="t"><svg class="ic ic-s"><use href="#i-scan"/></svg> What the photos show</p>
+        <p>Once you have a few weekly photos in, this compares your pose and lighting week to week and calls out the visible change. Keep the same pose so the read stays reliable.</p>
       </div>
       <div class="read tip">
-        <p class="t"><i class="ti ti-target"></i> How to reach your goal</p>
-        <p>You are halfway to your 82 cm waist goal. At this pace you will get there around week 9. Keep your 6 daily ticks, hold protein near 160 g, and add one more walk on rest days.</p>
+        <p class="t"><svg class="ic ic-s"><use href="#i-target"/></svg> How to reach your goal</p>
+        <p id="goalTip">Log your first check-in and I will show you exactly what to hold and where to push to hit your goal.</p>
       </div>
     </section>
 
     <!-- PROFILE -->
     <section class="screen" data-screen="profile">
       <h1>Your profile</h1>
-      <p class="sub">This personalises your progress analysis</p>
+      <p class="sub">This personalises your progress insights</p>
       <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-        <div class="pava">K</div>
-        <div><p style="margin:0; font-size:17px; font-weight:600;">Kalolo</p><p style="margin:2px 0 0; font-size:13px; color:var(--muted);">Member since week 1</p></div>
+        <label class="pava" for="avatar" id="pava"><span id="pavaInner">K</span><span class="edit"><svg class="ic"><use href="#i-camera"/></svg></span><input id="avatar" type="file" accept="image/*" hidden /></label>
+        <div><input type="text" id="pName" value="Kalolo" style="font-size:16px; font-weight:600; border:none; padding:0; width:100%;" /><p style="margin:2px 0 0; font-size:12px; color:var(--muted);">Tap the photo to add yours. It stays private.</p></div>
       </div>
       <div class="mb"><label class="fld">Your why</label>
-        <textarea>Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.</textarea></div>
-      <label class="fld">Photo frequency</label>
-      <div class="seg mb" id="cadence2">
-        <button class="on" data-cad="daily"><i class="ti ti-calendar-event"></i> Daily</button>
-        <button data-cad="weekly"><i class="ti ti-calendar-week"></i> Weekly</button>
+        <textarea id="pWhy">Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.</textarea></div>
+      <div class="two mb">
+        <div><label class="fld">Age</label><input type="number" id="pAge" value="34" /></div>
+        <div><label class="fld">Height (cm)</label><input type="number" id="pHeight" value="178" /></div>
       </div>
       <div class="two mb">
-        <div><label class="fld">Age</label><input type="number" value="34" /></div>
-        <div><label class="fld">Height (cm)</label><input type="number" value="178" /></div>
-      </div>
-      <div class="two mb">
-        <div><label class="fld">Start weight (kg)</label><input type="number" value="87" /></div>
-        <div><label class="fld">Goal weight (kg)</label><input type="number" value="80" /></div>
+        <div><label class="fld">Start weight (kg)</label><input type="number" id="pStart" value="87" /></div>
+        <div><label class="fld">Goal weight (kg)</label><input type="number" id="pGoal" value="80" /></div>
       </div>
       <p class="sech" style="margin-top:6px;">Daily targets</p>
       <div class="two mb">
-        <div><label class="fld">Protein (g)</label><input type="number" value="160" /></div>
-        <div><label class="fld">Water (L)</label><input type="number" value="3" /></div>
-      </div>
-      <div class="two mb">
-        <div><label class="fld">Sleep (h)</label><input type="number" value="7.5" /></div>
-        <div><label class="fld">Workouts / week</label><input type="number" value="5" /></div>
+        <div><label class="fld">Protein (g)</label><input type="number" id="pProtein" value="160" /></div>
+        <div><label class="fld">Water (L)</label><input type="number" id="pWater" value="3" /></div>
       </div>
       <button class="btn" id="psave">Save profile</button>
+
+      <p class="sech">The crew</p>
+      <div class="note"><svg class="ic ic-s"><use href="#i-users"/></svg><span>Live crew stats, where you see each other's streaks and ticks, arrive with the shared version. For now this is the roster.</span></div>
+      <div id="crew"></div>
     </section>
   </main>
 
   <nav>
-    <button class="on" data-tab="home"><i class="ti ti-home"></i><span>Home</span></button>
-    <button data-tab="checkin"><i class="ti ti-circle-check"></i><span>Check-in</span></button>
-    <button data-tab="progress"><i class="ti ti-chart-line"></i><span>Progress</span></button>
-    <button data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
+    <button class="on" data-tab="home"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
+    <button data-tab="checkin"><svg class="ic"><use href="#i-check-c"/></svg><span>Check-in</span></button>
+    <button data-tab="progress"><svg class="ic"><use href="#i-chart"/></svg><span>Progress</span></button>
+    <button data-tab="profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
   </nav>
 </div>
 
 <script>
+  function ic(name, cls){ return '<svg class="ic'+(cls?' '+cls:'')+'"><use href="#'+name+'"/></svg>'; }
+  var TASKS = [
+    ['i-barbell','Workout','One session today'],
+    ['i-bolt','Protein','Hit your target'],
+    ['i-droplet','Water','3 litres through the day'],
+    ['i-moon','Good sleep','7+ hours'],
+    ['i-spark','Daily prayer','Take the time'],
+    ['i-book','Read a chapter','Scripture or an inspiring book']
+  ];
+  var CREW = [
+    ['Jay Larry','@4our5ive4our'],['Jimmy Kaufisi','@jimmy.kaufisi'],
+    ['Pasitaua Haufano','@pasitaua.haufano'],['Peter Finch','@peter.finch.581'],
+    ['Peter Haufano','@petehauf18'],['Kalolo Haufano','@haufano'],
+    ['Timothy Dewandran','@timothy.dewandran.2025']
+  ];
+  var QUOTES = [
+    ['The past is behind, learn from it. The future is ahead, prepare for it. The present is here, live it.','Thomas S. Monson'],
+    ['Without hard work, nothing grows but weeds.','Gordon B. Hinckley'],
+    ['It is your reaction to adversity, not the adversity itself, that determines how your life’s story will develop.','Dieter F. Uchtdorf'],
+    ['When we put God first, all other things fall into their proper place.','Ezra Taft Benson'],
+    ['The joy we feel has little to do with the circumstances of our lives and everything to do with the focus of our lives.','Russell M. Nelson'],
+    ['You can’t build a great building on a weak foundation.','Gordon B. Hinckley'],
+    ['I can do all things through Christ which strengtheneth me.','Philippians 4:13'],
+    ['If they humble themselves before me, then will I make weak things become strong unto them.','Ether 12:27'],
+    ['Be not weary in well-doing, for out of small things proceedeth that which is great.','Doctrine and Covenants 64:33'],
+    ['Know ye not that your body is the temple of the Holy Ghost which is in you?','1 Corinthians 6:19'],
+    ['Let us not be weary in well doing: for in due season we shall reap, if we faint not.','Galatians 6:9'],
+    ['Happiness is the object and design of our existence.','Joseph Smith'],
+    ['That which we persist in doing becomes easier, not that the task is easier, but our ability to do has increased.','Heber J. Grant'],
+    ['No other success can compensate for failure in the home.','David O. McKay'],
+    ['You have power over your mind, not outside events. Realise this, and you will find strength.','Marcus Aurelius'],
+    ['Difficulties strengthen the mind, as labour does the body.','Seneca'],
+    ['We are what we repeatedly do. Excellence is not an act, but a habit.','Will Durant, on Aristotle'],
+    ['You do not rise to the level of your goals. You fall to the level of your systems.','James Clear'],
+    ['Take care of your body. It’s the only place you have to live.','Jim Rohn'],
+    ['It does not matter how slowly you go as long as you do not stop.','Confucius'],
+    ['The impediment to action advances action. What stands in the way becomes the way.','Marcus Aurelius'],
+    ['Discipline equals freedom.','Jocko Willink'],
+    ['Strength does not come from winning. Your struggles develop your strengths.','Arnold Schwarzenegger'],
+    ['Summer bodies are made in the winter.','The Boys'],
+    ['The only place success comes before work is in the dictionary.','Vince Lombardi'],
+    ['Don’t count the days. Make the days count.','Muhammad Ali']
+  ];
+
+  var KEY = 'brothers75v1';
+  function todayStr(){ var n=new Date(); return n.getFullYear()+'-'+('0'+(n.getMonth()+1)).slice(-2)+'-'+('0'+n.getDate()).slice(-2); }
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  var state = load();
+  if(!state.profile) state.profile = {name:'Kalolo', why:'Be fit and present for my family, and lead the brothers by example. No more takeaways, just whole foods.', age:34, height:178, start:87, goal:80, goalWaist:82, protein:160, water:3, cadence:'daily', avatar:null};
+  if(!state.history) state.history = [];
+  if(!state.today || state.today.date !== todayStr()){
+    var last = state.history[state.history.length-1] || {};
+    state.today = {date: todayStr(), tasks:[false,false,false,false,false,false], waist: last.waist||86, weight: last.weight||state.profile.start||84, photo:null};
+  }
+  save();
+
+  function dayInfo(){
+    var s0 = new Date(2026,6,6); var n=new Date(); var t0=new Date(n.getFullYear(),n.getMonth(),n.getDate());
+    var d = Math.floor((t0 - s0)/86400000)+1;
+    if(d<1) return 'Starts Mon 6 Jul'; if(d>75) return 'Complete'; return 'Day '+d+' of 75';
+  }
+  document.getElementById('dayBadge').textContent = dayInfo();
+
+  (function(){
+    var n=new Date(); var t0=new Date(n.getFullYear(),n.getMonth(),n.getDate());
+    var doy = Math.floor((t0 - new Date(t0.getFullYear(),0,0))/86400000);
+    var q = QUOTES[doy % QUOTES.length];
+    document.getElementById('qText').textContent = '“'+q[0]+'”';
+    document.getElementById('qAuthor').textContent = '— '+q[1];
+  })();
+
   var tabs=document.querySelectorAll('nav button'), screens=document.querySelectorAll('.screen');
-  function show(n){
-    screens.forEach(function(s){s.classList.toggle('on', s.dataset.screen===n);});
-    tabs.forEach(function(t){t.classList.toggle('on', t.dataset.tab===n);});
-    document.querySelector('main').scrollTop=0;
-  }
+  function show(n){ screens.forEach(function(s){s.classList.toggle('on', s.dataset.screen===n);}); tabs.forEach(function(t){t.classList.toggle('on', t.dataset.tab===n);}); document.querySelector('main').scrollTop=0; }
   tabs.forEach(function(t){t.addEventListener('click',function(){show(t.dataset.tab);});});
-  document.querySelectorAll('[data-go]').forEach(function(el){el.addEventListener('click',function(){show(el.dataset.go);});});
 
-  // photo cadence toggle (daily vs weekly), kept in sync across check-in and profile
-  var photoTitle=document.getElementById('photoTitle'), photoHint=document.getElementById('photoHint'), numTitle=document.getElementById('numTitle');
-  function setCadence(cad){
-    document.querySelectorAll('[id^=cadence] button').forEach(function(b){b.classList.toggle('on', b.dataset.cad===cad);});
-    if(cad==='daily'){ photoTitle.textContent='Add today’s photo'; photoHint.textContent='A quick snap, same pose each time'; numTitle.textContent='Today’s numbers'; }
-    else { photoTitle.textContent='Add this week’s photo'; photoHint.textContent='Same pose, same spot · due Sunday'; numTitle.textContent='This week’s numbers'; }
+  var homeList=document.getElementById('homeList');
+  TASKS.forEach(function(t,i){
+    var d=document.createElement('div'); d.className='item'; d.dataset.i=i;
+    d.innerHTML=ic(t[0],'lead')+'<div class="body"><p>'+t[1]+'</p><small>'+t[2]+'</small></div><span class="check">'+ic('i-check')+'</span>';
+    homeList.appendChild(d);
+  });
+  function renderTasks(){
+    var done=0;
+    homeList.querySelectorAll('.item').forEach(function(el){ var on=state.today.tasks[el.dataset.i]; el.classList.toggle('done', on); if(on) done++; });
+    document.getElementById('taskCount').textContent = done+' of 6';
+    document.getElementById('taskBar').style.width = (done/6*100)+'%';
+    document.getElementById('hStreak').textContent = streak();
   }
-  document.querySelectorAll('[id^=cadence] button').forEach(function(b){b.addEventListener('click',function(){setCadence(b.dataset.cad);});});
+  homeList.addEventListener('click', function(e){
+    var it=e.target.closest('.item'); if(!it) return;
+    var i=it.dataset.i; state.today.tasks[i]=!state.today.tasks[i]; upsertHistory(); save(); renderTasks();
+  });
 
-  var items=document.querySelectorAll('.item'), count=document.getElementById('count'), homeToday=document.getElementById('homeToday');
-  function refresh(){var d=document.querySelectorAll('.item.done').length; count.textContent=d+' of 6 done today'; homeToday.innerHTML=d+'<small>/6</small>';}
-  items.forEach(function(it){it.addEventListener('click',function(){it.classList.toggle('done'); refresh();});});
+  function upsertHistory(){
+    var done=state.today.tasks.filter(Boolean).length;
+    var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo};
+    var h=state.history; if(h.length && h[h.length-1].date===state.today.date) h[h.length-1]=rec; else h.push(rec);
+    if(h.length>60) h.shift();
+  }
+  function streak(){
+    var days={}; state.history.forEach(function(r){ days[r.date]= r.done>=6; });
+    if(state.today.tasks.filter(Boolean).length>=6) days[state.today.date]=true;
+    var s=0, d=new Date();
+    for(var k=0;k<100;k++){
+      var ds=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+      if(days[ds]) s++; else if(k>0) break;
+      d.setDate(d.getDate()-1);
+    }
+    return s;
+  }
+
+  function renderHome(){
+    document.getElementById('greeting').textContent = 'Kia ora, '+(state.profile.name||'brother');
+    var w=state.today.weight, start=Number(state.profile.start)||w;
+    document.getElementById('hWeight').innerHTML = w+'<small>kg</small>';
+    var dw = Math.round((start-w)*10)/10;
+    document.getElementById('hWeightD').innerHTML = dw>0 ? ic('i-arrow-dr','ic-s')+' '+dw+'kg' : '&nbsp;';
+    document.getElementById('hWaist').innerHTML = state.today.waist+'<small>cm</small>';
+    document.getElementById('hWaistD').innerHTML = 'goal '+(state.profile.goalWaist||82)+'cm';
+  }
 
   var waist=document.getElementById('waist'), waistv=document.getElementById('waistv');
-  waist.addEventListener('input',function(){waistv.textContent=waist.value+' cm';});
   var weight=document.getElementById('weight'), weightv=document.getElementById('weightv');
-  weight.addEventListener('input',function(){weightv.textContent=weight.value+' kg';});
+  waist.value=state.today.waist; waistv.textContent=state.today.waist+' cm';
+  weight.value=state.today.weight; weightv.textContent=state.today.weight+' kg';
+  waist.addEventListener('input',function(){ waistv.textContent=waist.value+' cm'; });
+  weight.addEventListener('input',function(){ weightv.textContent=weight.value+' kg'; });
 
-  var photo=document.getElementById('photo'), drop=document.querySelector('.drop');
-  photo.addEventListener('change',function(){if(photo.files&&photo.files[0]){photoTitle.textContent='Photo added ✓'; drop.style.borderColor='#1D9E75';}});
+  var photoTitle=document.getElementById('photoTitle'), numTitle=document.getElementById('numTitle');
+  function setCad(c){ document.querySelectorAll('#cadence button').forEach(function(b){b.classList.toggle('on', b.dataset.cad===c);});
+    if(c==='daily'){ photoTitle.textContent='Add today’s photo'; numTitle.textContent='Today’s numbers'; }
+    else { photoTitle.textContent='Add this week’s photo'; numTitle.textContent='This week’s numbers'; }
+    state.profile.cadence=c; save();
+  }
+  document.querySelectorAll('#cadence button').forEach(function(b){b.addEventListener('click',function(){setCad(b.dataset.cad);});});
 
-  function done(btn,label){btn.textContent=label; btn.style.background='#0F6E56';}
-  document.getElementById('save').addEventListener('click',function(){done(this,'Check-in saved ✓');});
-  document.getElementById('psave').addEventListener('click',function(){done(this,'Profile saved ✓');});
+  function scaleImg(file, max, cb){
+    var r=new FileReader(); r.onload=function(e){ var img=new Image(); img.onload=function(){
+      var s=Math.min(max/img.width, max/img.height, 1); var c=document.createElement('canvas');
+      c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height); cb(c.toDataURL('image/jpeg',0.78));
+    }; img.src=e.target.result; }; r.readAsDataURL(file);
+  }
+  document.getElementById('photo').addEventListener('change',function(){
+    if(this.files&&this.files[0]) scaleImg(this.files[0], 260, function(url){
+      state.today.photo=url; upsertHistory(); save();
+      document.getElementById('dropInner').innerHTML='<img src="'+url+'" style="max-height:180px" alt="Your progress photo"/><p style="margin-top:8px">Photo added ✓</p>';
+      renderTimeline();
+    });
+  });
+  function renderTimeline(){
+    var tl=document.getElementById('timeline'); tl.innerHTML='';
+    var photos=state.history.filter(function(r){return r.photo;});
+    for(var i=0;i<4;i++){ var d=document.createElement('div'); d.className='th';
+      var p=photos[photos.length-4+i]; if(p&&p.photo) d.innerHTML='<img src="'+p.photo+'" alt="Progress photo"/>'; else d.innerHTML=ic('i-user'); tl.appendChild(d); }
+  }
+
+  document.getElementById('save').addEventListener('click',function(){
+    state.today.waist=Number(waist.value); state.today.weight=Number(weight.value); upsertHistory(); save();
+    renderHome(); renderProgress();
+    this.textContent='Check-in saved ✓'; this.style.background='#0F6E56';
+    var b=this; setTimeout(function(){ b.textContent='Save check-in'; b.style.background=''; }, 1600);
+  });
+
+  var bH=document.getElementById('bH'), bW=document.getElementById('bW');
+  function bmiCalc(){
+    var h=Number(bH.value)/100, w=Number(bW.value); if(!h||!w) return;
+    var bmi=Math.round(w/(h*h)*10)/10, cat, col, bg;
+    if(bmi<18.5){cat='Underweight'; col='#854F0B'; bg='#FAEEDA';}
+    else if(bmi<25){cat='Healthy'; col='#0F6E56'; bg='#E1F5EE';}
+    else if(bmi<30){cat='Overweight'; col='#854F0B'; bg='#FAEEDA';}
+    else {cat='Obese'; col='#A32D2D'; bg='#FCEBEB';}
+    document.getElementById('bmiN').textContent=bmi;
+    var c=document.getElementById('bmiCat'); c.textContent=cat; c.style.color=col; c.style.background=bg;
+    var lo=Math.round(18.5*h*h), hi=Math.round(24.9*h*h);
+    document.getElementById('bmiRange').textContent='Healthy weight for your height is about '+lo+' to '+hi+' kg.';
+  }
+  bH.addEventListener('input',bmiCalc); bW.addEventListener('input',bmiCalc);
+
+  function renderProgress(){
+    bH.value=state.profile.height||178; bW.value=state.today.weight; bmiCalc();
+    var start=Number(state.profile.start)||state.today.weight, goal=Number(state.profile.goal)||start, cur=state.today.weight;
+    var pct = start===goal?0:Math.max(0,Math.min(100, Math.round((start-cur)/(start-goal)*100)));
+    document.getElementById('goalLabel').textContent='Weight goal: '+goal+' kg';
+    document.getElementById('goalPct').textContent=pct+'%';
+    document.getElementById('goalFill').style.width=pct+'%';
+    document.getElementById('goalTip').textContent = pct<=0
+      ? 'Log your check-ins daily. Hold protein near '+(state.profile.protein||160)+' g and water at '+(state.profile.water||3)+' L, and you will see the waist move first.'
+      : 'You are '+pct+'% to your '+goal+' kg goal. Keep the 6 daily ticks, protein near '+(state.profile.protein||160)+' g, and add one extra walk on rest days.';
+    var recs=state.history.slice(-6); var bars=document.getElementById('waistBars'), ax=document.getElementById('waistAxis');
+    bars.innerHTML=''; ax.innerHTML='';
+    if(recs.length<2){ bars.innerHTML='<div style="flex:1; background:var(--bg); height:40%; border-radius:6px; display:flex; align-items:center; justify-content:center; color:var(--hint); font-size:12px; text-align:center; padding:0 8px;">Your waist trend shows here after a few check-ins</div>'; return; }
+    var vals=recs.map(function(r){return r.waist;}); var mn=Math.min.apply(null,vals)-2, mx=Math.max.apply(null,vals)+1;
+    recs.forEach(function(r,i){ var h=mx===mn?60:Math.round((r.waist-mn)/(mx-mn)*90+10); var d=document.createElement('div'); d.style.height=h+'%'; d.style.background=i>=recs.length-2?'#1D9E75':'#9FE1CB'; bars.appendChild(d); var s=document.createElement('span'); s.textContent=r.date.slice(5); ax.appendChild(s); });
+  }
+
+  var P=state.profile;
+  document.getElementById('pName').value=P.name; document.getElementById('pWhy').value=P.why;
+  document.getElementById('pAge').value=P.age; document.getElementById('pHeight').value=P.height;
+  document.getElementById('pStart').value=P.start; document.getElementById('pGoal').value=P.goal;
+  document.getElementById('pProtein').value=P.protein; document.getElementById('pWater').value=P.water;
+  function renderAvatar(){ var el=document.getElementById('pavaInner'); if(P.avatar) el.outerHTML='<img id="pavaInner" src="'+P.avatar+'" alt="Your photo"/>'; else el.textContent=(P.name||'K').charAt(0); }
+  renderAvatar();
+  document.getElementById('avatar').addEventListener('change',function(){ if(this.files&&this.files[0]) scaleImg(this.files[0],200,function(url){ P.avatar=url; save(); renderAvatar(); }); });
+  document.getElementById('psave').addEventListener('click',function(){
+    P.name=document.getElementById('pName').value; P.why=document.getElementById('pWhy').value;
+    P.age=+document.getElementById('pAge').value; P.height=+document.getElementById('pHeight').value;
+    P.start=+document.getElementById('pStart').value; P.goal=+document.getElementById('pGoal').value;
+    P.protein=+document.getElementById('pProtein').value; P.water=+document.getElementById('pWater').value;
+    save(); renderHome(); renderProgress();
+    this.textContent='Profile saved ✓'; this.style.background='#0F6E56';
+    var b=this; setTimeout(function(){ b.textContent='Save profile'; b.style.background=''; }, 1600);
+  });
+
+  var crew=document.getElementById('crew');
+  CREW.forEach(function(m){ var d=document.createElement('div'); d.className='mate';
+    d.innerHTML='<div class="ava">'+m[0].charAt(0)+'</div><div class="nm"><p>'+m[0]+'</p><small>'+m[1]+'</small></div><span style="font-size:12px; color:var(--hint);">Day 1</span>';
+    crew.appendChild(d); });
+
+  setCad(P.cadence||'daily'); renderTasks(); renderHome(); renderTimeline(); renderProgress();
 </script>
 </body>
 </html>
