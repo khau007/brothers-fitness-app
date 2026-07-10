@@ -21,12 +21,16 @@ create table if not exists logs (
   name text not null,
   date date not null,
   tasks jsonb,
+  foods jsonb,
   done int default 0,
   waist numeric,
   weight numeric,
   updated_at timestamptz default now(),
   primary key (group_code, name, date)
 );
+
+-- if you already ran the block above once, this line safely adds the new column
+alter table logs add column if not exists foods jsonb;
 
 alter table brothers enable row level security;
 alter table logs enable row level security;

@@ -161,6 +161,11 @@
   .mbar span{display:block; height:100%;}
   .mkey{display:flex; gap:14px; font-size:12px; color:var(--muted); margin-bottom:14px; flex-wrap:wrap;}
   .mkey span{display:flex; align-items:center; gap:5px;} .mkey i{width:10px; height:10px; border-radius:2px;}
+  .mini{height:8px; background:#e2e4df; border-radius:6px; overflow:hidden; margin-bottom:14px;}
+  .mini span{display:block; height:100%; border-radius:6px;}
+  .frow{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line);}
+  .frow .fbody{flex:1;} .frow .fbody p{margin:0; font-size:14px;} .frow .fbody small{color:var(--muted); font-size:12px;}
+  .frow .fdel{background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; flex-shrink:0;}
 
   .read{border-radius:12px; padding:14px 16px; margin-bottom:12px;}
   .read.ai{background:var(--green-light);} .read.tip2{background:var(--bg);}
@@ -240,6 +245,10 @@
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5h6a2 2 0 0 1 2 2V19a2 2 0 0 0-2-2H5z"/><path d="M19 5.5h-6a2 2 0 0 0-2 2V19a2 2 0 0 1 2-2h6z"/></symbol>
   <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 1 4 10.5c-.6.6-1 1.3-1 2.1H9c0-.8-.4-1.5-1-2.1A6 6 0 0 1 12 3z"/></symbol>
   <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7"/><line x1="12" y1="17" x2="12" y2="17"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24"><path d="M7 3v6a1.5 1.5 0 0 0 3 0V3"/><path d="M8.5 9v12"/><path d="M16 3c-1.4 0-2.5 1.8-2.5 4.5S14.6 12 16 12v9"/></symbol>
+  <symbol id="i-barcode" viewBox="0 0 24 24"><rect x="3" y="4" width="2" height="16" style="fill:currentColor;stroke:none"/><rect x="7" y="4" width="1" height="16" style="fill:currentColor;stroke:none"/><rect x="10" y="4" width="3" height="16" style="fill:currentColor;stroke:none"/><rect x="15" y="4" width="1" height="16" style="fill:currentColor;stroke:none"/><rect x="18" y="4" width="3" height="16" style="fill:currentColor;stroke:none"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></symbol>
 </svg>
 
 <div class="app">
@@ -296,6 +305,32 @@
       <div class="compare" id="compare"></div>
       <p class="sech">Your photo timeline</p>
       <div class="thumbs" id="timeline"></div>
+    </section>
+
+    <!-- FOOD -->
+    <section class="screen" data-screen="food">
+      <h1>Today's food</h1>
+      <p class="sub">Log what you eat, scan a barcode or add it yourself.</p>
+
+      <div class="macros">
+        <div class="kcal"><span class="n" id="fKcal">0</span><span class="u">/ <span id="fKcalTarget">0</span> kcal today</span></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:5px;"><span>Protein</span><span id="fProteinLbl">0 / 0g</span></div>
+        <div class="mini"><span id="fProteinFill" style="width:0%; background:var(--green);"></span></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:5px;"><span>Carbs</span><span id="fCarbsLbl">0 / 0g</span></div>
+        <div class="mini"><span id="fCarbsFill" style="width:0%; background:var(--amber);"></span></div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:5px;"><span>Fats</span><span id="fFatsLbl">0 / 0g</span></div>
+        <div class="mini" style="margin-bottom:0;"><span id="fFatsFill" style="width:0%; background:var(--coral);"></span></div>
+      </div>
+
+      <div class="two mb">
+        <button class="btn" id="scanBtn"><svg class="ic ic-s"><use href="#i-barcode"/></svg> Scan a barcode</button>
+        <button class="btn ghost" id="manualAddBtn"><svg class="ic ic-s"><use href="#i-plus"/></svg> Add manually</button>
+      </div>
+      <p class="cap" style="margin:-10px 0 16px;">Scanning works for packaged food with a barcode. For anything home-cooked, add it manually.</p>
+
+      <p class="sech">Logged today</p>
+      <p class="cap" id="foodEmpty">Nothing logged yet today.</p>
+      <div id="foodList"></div>
     </section>
 
     <!-- DASHBOARD -->
@@ -413,6 +448,7 @@
   <nav>
     <button class="on" data-tab="home"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
     <button data-tab="checkin"><svg class="ic"><use href="#i-check-c"/></svg><span>Check-in</span></button>
+    <button data-tab="food"><svg class="ic"><use href="#i-food"/></svg><span>Food</span></button>
     <button data-tab="progress"><svg class="ic"><use href="#i-chart"/></svg><span>Dashboard</span></button>
     <button data-tab="crew"><svg class="ic"><use href="#i-users"/></svg><span>Crew</span></button>
     <button data-tab="profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
@@ -460,6 +496,38 @@
     </div>
   </div>
 
+  <!-- ADD FOOD -->
+  <div class="modal" id="foodModal">
+    <div class="modal-card">
+      <h3>Add food</h3>
+      <p class="sub2" id="foodModalSub">Enter what you're eating.</p>
+      <div class="mb"><label class="fld">Food name</label><input id="fmName" type="text" placeholder="e.g. Chicken and rice" /></div>
+      <div class="mb" id="fmServingRow" style="display:none;">
+        <label class="fld">Serving (g)</label>
+        <input id="fmServing" type="number" value="100" step="1" />
+      </div>
+      <div class="three mb">
+        <div><label class="fld">Protein (g)</label><input id="fmProtein" type="number" step="0.1" value="0" /></div>
+        <div><label class="fld">Carbs (g)</label><input id="fmCarbs" type="number" step="0.1" value="0" /></div>
+        <div><label class="fld">Fats (g)</label><input id="fmFats" type="number" step="0.1" value="0" /></div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn ghost" id="fmCancel" style="flex:1">Cancel</button>
+        <button class="btn" id="fmAdd" style="flex:1">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCAN BARCODE -->
+  <div class="modal" id="scanModal">
+    <div class="modal-card" style="text-align:center;">
+      <h3>Scan a barcode</h3>
+      <p class="sub2" id="scanStatus">Point your camera at the barcode</p>
+      <video id="scanVideo" style="width:100%; border-radius:10px; background:#000; margin-bottom:14px;" muted playsinline></video>
+      <button class="btn ghost" id="scanCancel">Cancel</button>
+    </div>
+  </div>
+
   <!-- FIX A DAY -->
   <div class="modal" id="editModal">
     <div class="modal-card">
@@ -475,6 +543,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library/umd/index.min.js"></script>
 <script>
   var SUPABASE_URL = 'https://wkfxpptlfdsrhkiyjbbk.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_QHdvYuyEanzdqp3Q9506Jg_H46ziA_T';
@@ -566,8 +635,9 @@
   if(!state.history) state.history = [];
   if(!state.today || state.today.date !== todayStr()){
     var last = state.history[state.history.length-1] || {};
-    state.today = {date: todayStr(), tasks:[false,false,false,false,false,false], waist: last.waist||state.profile.goalWaist||90, weight: last.weight||state.profile.start||84, photo:null};
+    state.today = {date: todayStr(), tasks:[false,false,false,false,false,false], waist: last.waist||state.profile.goalWaist||90, weight: last.weight||state.profile.start||84, photo:null, foods:[]};
   }
+  if(!state.today.foods) state.today.foods=[];
   save();
 
   var curDay = Math.floor((midnight(new Date()) - START)/86400000)+1;
@@ -606,11 +676,11 @@
 
   function upsertHistory(){
     var done=state.today.tasks.filter(Boolean).length;
-    var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo, tasks:state.today.tasks.slice()};
+    var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo, tasks:state.today.tasks.slice(), foods:(state.today.foods||[]).slice()};
     var h=state.history; if(h.length && h[h.length-1].date===state.today.date) h[h.length-1]=rec; else h.push(rec);
     if(h.length>90) h.shift();
   }
-  function histMap(){ var m={}; state.history.forEach(function(r){m[r.date]=r;}); m[state.today.date]={date:state.today.date, done:state.today.tasks.filter(Boolean).length, waist:state.today.waist, weight:state.today.weight, tasks:state.today.tasks.slice()}; return m; }
+  function histMap(){ var m={}; state.history.forEach(function(r){m[r.date]=r;}); m[state.today.date]={date:state.today.date, done:state.today.tasks.filter(Boolean).length, waist:state.today.waist, weight:state.today.weight, tasks:state.today.tasks.slice(), foods:(state.today.foods||[]).slice()}; return m; }
   function streak(){
     var m=histMap(); var s=0, d=new Date();
     for(var k=0;k<120;k++){ var ds=fmtDate(d); if(m[ds]&&m[ds].done>=6) s++; else if(k>0) break; d.setDate(d.getDate()-1); }
@@ -838,7 +908,7 @@
     P.start=+pStart.value; P.goal=+pGoal.value;
     P.protein=+pProtein.value; P.carbs=+pCarbs.value; P.fats=+pFats.value; P.water=+pWater.value;
     if(state.history.length===0){ state.today.weight=P.start||state.today.weight; }
-    save(); syncNumbers(); renderHome(); renderProgress();
+    save(); syncNumbers(); renderHome(); renderProgress(); renderFoodTotals();
     pushProfileRemote();
     this.textContent='Profile saved ✓'; this.style.background='#0F6E56';
     var b=this; setTimeout(function(){ b.textContent='Save profile'; b.style.background=''; }, 1600);
@@ -847,27 +917,33 @@
   // cloud sync (Supabase) — safe no-ops if offline or not signed in yet
   function syncToday(){ if(sb) pushLogRemote(histMap()[state.today.date]); }
   function pushProfileRemote(){
-    if(!sb || !state.groupOk || !state.profile.name) return Promise.resolve();
+    if(!sb || !state.groupOk || !state.profile.name) return Promise.resolve(true);
     return sb.from('brothers').upsert({
       group_code:GROUP_CODE, name:state.profile.name, why:state.profile.why||'', age:state.profile.age||null,
       height:state.profile.height||null, start_weight:state.profile.start||null, goal_weight:state.profile.goal||null,
       goal_waist:state.profile.goalWaist||null, protein:state.profile.protein||null, carbs:state.profile.carbs||null,
       fats:state.profile.fats||null, water:state.profile.water||null, cadence:state.profile.cadence||'daily',
       updated_at:new Date().toISOString()
-    }, {onConflict:'group_code,name'}).then(function(r){ if(r&&r.error) console.warn('profile sync failed', r.error); }).catch(function(e){ console.warn('profile sync failed', e); });
+    }, {onConflict:'group_code,name'}).then(function(r){ if(r&&r.error){ console.warn('profile sync failed', r.error); return false; } return true; }).catch(function(e){ console.warn('profile sync failed', e); return false; });
   }
   function pushLogRemote(rec){
-    if(!sb || !rec || !state.groupOk || !state.profile.name) return Promise.resolve();
+    if(!sb || !rec || !state.groupOk || !state.profile.name) return Promise.resolve(true);
     return sb.from('logs').upsert({
-      group_code:GROUP_CODE, name:state.profile.name, date:rec.date, done:rec.done||0, tasks: rec.tasks||null,
+      group_code:GROUP_CODE, name:state.profile.name, date:rec.date, done:rec.done||0, tasks: rec.tasks||null, foods: rec.foods||null,
       waist:rec.waist||null, weight:rec.weight||null, updated_at:new Date().toISOString()
-    }, {onConflict:'group_code,name,date'}).then(function(r){ if(r&&r.error) console.warn('log sync failed', r.error); }).catch(function(e){ console.warn('log sync failed', e); });
+    }, {onConflict:'group_code,name,date'}).then(function(r){ if(r&&r.error){ console.warn('log sync failed', r.error); return false; } return true; }).catch(function(e){ console.warn('log sync failed', e); return false; });
   }
   function historyArrayForMigrate(){ var m=histMap(); return Object.keys(m).map(function(k){return m[k];}); }
   function migrateLocalToRemote(){
     if(!sb || state.migrated || !state.groupOk || !state.profile.name) return Promise.resolve();
     var recs = historyArrayForMigrate();
-    return Promise.all(recs.map(pushLogRemote)).then(function(){ return pushProfileRemote(); }).then(function(){ state.migrated=true; save(); }).catch(function(e){ console.warn('migration failed', e); });
+    return Promise.all(recs.map(pushLogRemote)).then(function(logResults){
+      return pushProfileRemote().then(function(profOk){
+        var allOk = profOk && logResults.every(function(ok){ return ok; });
+        if(allOk){ state.migrated=true; save(); }
+        else { console.warn('migration incomplete, will retry next visit'); }
+      });
+    }).catch(function(e){ console.warn('migration failed', e); });
   }
   function pullRemoteIntoState(){
     if(!sb || !state.groupOk || !state.profile.name) return Promise.resolve();
@@ -876,7 +952,7 @@
       var byDate={}; state.history.forEach(function(x){byDate[x.date]=x;});
       r.data.forEach(function(row){
         var existingPhoto = (byDate[row.date]&&byDate[row.date].photo)||null;
-        byDate[row.date] = {date:row.date, done:row.done, waist:row.waist, weight:row.weight, photo:existingPhoto, tasks:row.tasks||undefined};
+        byDate[row.date] = {date:row.date, done:row.done, waist:row.waist, weight:row.weight, photo:existingPhoto, tasks:row.tasks||undefined, foods:row.foods||undefined};
       });
       state.history = Object.keys(byDate).map(function(k){return byDate[k];}).sort(function(a,b){return a.date<b.date?-1:1;});
       var td = byDate[state.today.date];
@@ -884,8 +960,9 @@
         if(td.waist!=null) state.today.waist = td.waist;
         if(td.weight!=null) state.today.weight = td.weight;
         if(td.tasks && td.tasks.length===6) state.today.tasks = td.tasks;
+        if(td.foods && Array.isArray(td.foods)) state.today.foods = td.foods;
       }
-      save(); renderHome(); renderProgress(); renderTasks(); syncNumbers();
+      save(); renderHome(); renderProgress(); renderTasks(); syncNumbers(); renderFoodList(); renderFoodTotals();
     }).catch(function(e){ console.warn('pull failed', e); });
   }
   function computeStreakFor(logsByDate){
@@ -941,13 +1018,121 @@
     }).catch(function(){ renderCrew(); });
   }
 
+  // food logging
+  function renderFoodList(){
+    var list=document.getElementById('foodList'); list.innerHTML='';
+    var foods=state.today.foods||[];
+    document.getElementById('foodEmpty').style.display = foods.length ? 'none' : 'block';
+    foods.forEach(function(f,i){
+      var row=document.createElement('div'); row.className='frow';
+      row.innerHTML='<div class="fbody"><p>'+f.name+'</p><small>'+Math.round(f.protein)+'g protein · '+Math.round(f.carbs)+'g carbs · '+Math.round(f.fats)+'g fats</small></div>'
+        +'<button class="fdel" data-i="'+i+'" aria-label="Remove">'+ic('i-x','ic-s')+'</button>';
+      list.appendChild(row);
+    });
+  }
+  function setBar(prefix, val, target){
+    document.getElementById(prefix+'Lbl').textContent=Math.round(val)+' / '+Math.round(target)+'g';
+    var pct = target ? Math.min(100, Math.round(val/target*100)) : 0;
+    document.getElementById(prefix+'Fill').style.width=pct+'%';
+  }
+  function renderFoodTotals(){
+    var foods=state.today.foods||[];
+    var p=foods.reduce(function(a,f){return a+f.protein;},0);
+    var c=foods.reduce(function(a,f){return a+f.carbs;},0);
+    var fa=foods.reduce(function(a,f){return a+f.fats;},0);
+    var kcal=Math.round(p*4+c*4+fa*9);
+    var targetKcal=Math.round((state.profile.protein||0)*4+(state.profile.carbs||0)*4+(state.profile.fats||0)*9);
+    document.getElementById('fKcal').textContent=kcal;
+    document.getElementById('fKcalTarget').textContent=targetKcal;
+    setBar('fProtein', p, state.profile.protein||0);
+    setBar('fCarbs', c, state.profile.carbs||0);
+    setBar('fFats', fa, state.profile.fats||0);
+  }
+  document.getElementById('foodList').addEventListener('click', function(e){
+    var b=e.target.closest('.fdel'); if(!b) return;
+    var i=Number(b.dataset.i);
+    state.today.foods.splice(i,1); upsertHistory(); save(); renderFoodList(); renderFoodTotals(); syncToday();
+  });
+
+  var fmPer100=null;
+  function openFoodModal(mode, prefill){
+    document.getElementById('fmName').value = (prefill&&prefill.name)||'';
+    document.getElementById('fmServing').value = 100;
+    if(mode==='scan' && prefill && prefill.per100){
+      fmPer100 = prefill.per100;
+      document.getElementById('fmServingRow').style.display='block';
+      document.getElementById('foodModalSub').textContent='Adjust the serving size if needed.';
+      applyServing();
+    } else {
+      fmPer100 = null;
+      document.getElementById('fmServingRow').style.display='none';
+      document.getElementById('foodModalSub').textContent="Enter what you're eating.";
+      document.getElementById('fmProtein').value=0; document.getElementById('fmCarbs').value=0; document.getElementById('fmFats').value=0;
+    }
+    document.getElementById('foodModal').style.display='flex';
+  }
+  function applyServing(){
+    if(!fmPer100) return;
+    var g=Number(document.getElementById('fmServing').value)||0;
+    document.getElementById('fmProtein').value=r1(fmPer100.protein*g/100);
+    document.getElementById('fmCarbs').value=r1(fmPer100.carbs*g/100);
+    document.getElementById('fmFats').value=r1(fmPer100.fats*g/100);
+  }
+  document.getElementById('fmServing').addEventListener('input', applyServing);
+  document.getElementById('fmCancel').addEventListener('click', function(){ document.getElementById('foodModal').style.display='none'; });
+  document.getElementById('fmAdd').addEventListener('click', function(){
+    var name=document.getElementById('fmName').value.trim()||'Food';
+    var protein=Number(document.getElementById('fmProtein').value)||0;
+    var carbs=Number(document.getElementById('fmCarbs').value)||0;
+    var fats=Number(document.getElementById('fmFats').value)||0;
+    if(!state.today.foods) state.today.foods=[];
+    state.today.foods.push({name:name, protein:protein, carbs:carbs, fats:fats});
+    upsertHistory(); save(); renderFoodList(); renderFoodTotals(); syncToday();
+    document.getElementById('foodModal').style.display='none';
+  });
+  document.getElementById('manualAddBtn').addEventListener('click', function(){ openFoodModal('manual'); });
+
+  var zxingReader=null;
+  function startScan(){
+    if(!window.ZXing){ alert('Scanner is still loading. Try again in a moment, or add the food manually.'); return; }
+    document.getElementById('scanStatus').textContent='Point your camera at the barcode';
+    document.getElementById('scanModal').style.display='flex';
+    try{
+      zxingReader = new ZXing.BrowserMultiFormatReader();
+      var starter = zxingReader.decodeFromConstraints
+        ? zxingReader.decodeFromConstraints({video:{facingMode:'environment'}}, 'scanVideo', onScanResult)
+        : zxingReader.decodeFromVideoDevice(null, 'scanVideo', onScanResult);
+      starter.catch(function(e){ document.getElementById('scanStatus').textContent='Camera access needed. Check your browser permissions and try again.'; console.warn('scan start failed', e); });
+    }catch(e){ document.getElementById('scanStatus').textContent='Scanner failed to start.'; console.warn(e); }
+  }
+  function onScanResult(result, err){
+    if(result){ var text=result.getText(); stopScan(); lookupBarcode(text); }
+  }
+  function stopScan(){
+    if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
+    document.getElementById('scanModal').style.display='none';
+  }
+  document.getElementById('scanBtn').addEventListener('click', startScan);
+  document.getElementById('scanCancel').addEventListener('click', stopScan);
+  function lookupBarcode(code){
+    fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(code)+'.json')
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if(!data || data.status!==1 || !data.product){ alert("Couldn't find that product. Add it manually below."); return; }
+        var p=data.product, n=p.nutriments||{};
+        var per100 = { protein:Number(n.proteins_100g)||0, carbs:Number(n.carbohydrates_100g)||0, fats:Number(n.fat_100g)||0 };
+        openFoodModal('scan', {name:p.product_name||'Scanned item', per100:per100});
+      })
+      .catch(function(){ alert('Lookup failed. Check your connection, or add it manually below.'); });
+  }
+
   // overlays
   function openHow(){ document.getElementById('howto').style.display='flex'; }
   document.getElementById('helpBtn').addEventListener('click', openHow);
   document.getElementById('howBtn').addEventListener('click', openHow);
   document.getElementById('howGo').addEventListener('click', function(){ document.getElementById('howto').style.display='none'; show('profile'); });
 
-  setCad(P.cadence||'daily'); renderTasks(); renderHome(); renderTimeline(); renderCompare(); renderProgress(); renderCrew();
+  setCad(P.cadence||'daily'); renderTasks(); renderHome(); renderTimeline(); renderCompare(); renderProgress(); renderCrew(); renderFoodList(); renderFoodTotals();
   document.querySelector('nav button[data-tab="crew"]').addEventListener('click', loadCrewReal);
 
   // sign-in flow: group code, then pick who you are (first time only), then bring their existing days together
