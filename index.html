@@ -418,6 +418,18 @@
     <button data-tab="profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
   </nav>
 
+  <!-- CODE GATE -->
+  <div class="overlay" id="codeGate">
+    <div class="over-card center">
+      <div class="biglogo"><svg class="ic"><use href="#i-flame"/></svg></div>
+      <h2>75 Hard · The Boys</h2>
+      <p class="lead">Enter the group code to join the crew.</p>
+      <input id="groupCodeInput" type="text" placeholder="Group code" style="text-align:center; font-size:16px; margin-bottom:10px;" />
+      <p id="codeError" style="color:#A32D2D; font-size:13px; margin:0 0 10px; display:none;">That code doesn't match. Try again.</p>
+      <button class="btn" id="codeGo">Continue</button>
+    </div>
+  </div>
+
   <!-- SETUP: pick name -->
   <div class="overlay" id="setup">
     <div class="over-card center">
@@ -462,7 +474,14 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+  var SUPABASE_URL = 'https://wkfxpptlfdsrhkiyjbbk.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_QHdvYuyEanzdqp3Q9506Jg_H46ziA_T';
+  var GROUP_CODE = 'day1s';
+  var sb = null;
+  try{ if(window.supabase) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }catch(e){ console.warn('Supabase init failed', e); }
+
   function ic(name, cls){ return '<svg class="ic'+(cls?' '+cls:'')+'"><use href="#'+name+'"/></svg>'; }
   function r1(n){ return Math.round(n*10)/10; }
   function signed(n){ n=r1(n); return (n>0?'+':'')+n; }
@@ -542,6 +561,8 @@
   if(!state.profile) state.profile = {name:'', why:'', age:30, height:175, start:90, goal:82, goalWaist:90, protein:160, carbs:180, fats:60, water:3, cadence:'daily', avatar:null, setup:false};
   if(state.profile.carbs===undefined) state.profile.carbs=180;
   if(state.profile.fats===undefined) state.profile.fats=60;
+  if(state.groupOk===undefined) state.groupOk=false;
+  if(state.migrated===undefined) state.migrated=false;
   if(!state.history) state.history = [];
   if(!state.today || state.today.date !== todayStr()){
     var last = state.history[state.history.length-1] || {};
@@ -580,15 +601,16 @@
   homeList.addEventListener('click', function(e){
     var it=e.target.closest('.item'); if(!it) return;
     var i=it.dataset.i; state.today.tasks[i]=!state.today.tasks[i]; upsertHistory(); save(); renderTasks();
+    syncToday();
   });
 
   function upsertHistory(){
     var done=state.today.tasks.filter(Boolean).length;
-    var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo};
+    var rec={date:state.today.date, done:done, waist:state.today.waist, weight:state.today.weight, photo:state.today.photo, tasks:state.today.tasks.slice()};
     var h=state.history; if(h.length && h[h.length-1].date===state.today.date) h[h.length-1]=rec; else h.push(rec);
     if(h.length>90) h.shift();
   }
-  function histMap(){ var m={}; state.history.forEach(function(r){m[r.date]=r;}); m[state.today.date]={date:state.today.date, done:state.today.tasks.filter(Boolean).length, waist:state.today.waist, weight:state.today.weight}; return m; }
+  function histMap(){ var m={}; state.history.forEach(function(r){m[r.date]=r;}); m[state.today.date]={date:state.today.date, done:state.today.tasks.filter(Boolean).length, waist:state.today.waist, weight:state.today.weight, tasks:state.today.tasks.slice()}; return m; }
   function streak(){
     var m=histMap(); var s=0, d=new Date();
     for(var k=0;k<120;k++){ var ds=fmtDate(d); if(m[ds]&&m[ds].done>=6) s++; else if(k>0) break; d.setDate(d.getDate()-1); }
@@ -649,6 +671,7 @@
   document.getElementById('save').addEventListener('click',function(){
     state.today.weight=Number(weightI.value)||state.today.weight; state.today.waist=Number(waistI.value)||state.today.waist; upsertHistory(); save();
     renderHome(); renderProgress(); renderCompare();
+    syncToday();
     this.textContent='Check-in saved ✓'; this.style.background='#0F6E56';
     var b=this; setTimeout(function(){ b.textContent='Save check-in'; b.style.background=''; }, 1600);
   });
@@ -749,7 +772,10 @@
   document.getElementById('editSave').addEventListener('click',function(){
     if(editDate){ var found=false; state.history.forEach(function(r){ if(r.date===editDate){ r.done=editSel; found=true; } });
       if(!found){ state.history.push({date:editDate, done:editSel, waist:state.today.waist, weight:state.today.weight, photo:null}); state.history.sort(function(a,b){return a.date<b.date?-1:1;}); }
-      save(); renderProgress(); renderTasks(); }
+      save(); renderProgress(); renderTasks();
+      var editedRec = state.history.filter(function(r){return r.date===editDate;})[0];
+      if(editedRec) pushLogRemote(editedRec);
+    }
     document.getElementById('editModal').style.display='none';
   });
 
@@ -813,9 +839,107 @@
     P.protein=+pProtein.value; P.carbs=+pCarbs.value; P.fats=+pFats.value; P.water=+pWater.value;
     if(state.history.length===0){ state.today.weight=P.start||state.today.weight; }
     save(); syncNumbers(); renderHome(); renderProgress();
+    pushProfileRemote();
     this.textContent='Profile saved ✓'; this.style.background='#0F6E56';
     var b=this; setTimeout(function(){ b.textContent='Save profile'; b.style.background=''; }, 1600);
   });
+
+  // cloud sync (Supabase) — safe no-ops if offline or not signed in yet
+  function syncToday(){ if(sb) pushLogRemote(histMap()[state.today.date]); }
+  function pushProfileRemote(){
+    if(!sb || !state.groupOk || !state.profile.name) return Promise.resolve();
+    return sb.from('brothers').upsert({
+      group_code:GROUP_CODE, name:state.profile.name, why:state.profile.why||'', age:state.profile.age||null,
+      height:state.profile.height||null, start_weight:state.profile.start||null, goal_weight:state.profile.goal||null,
+      goal_waist:state.profile.goalWaist||null, protein:state.profile.protein||null, carbs:state.profile.carbs||null,
+      fats:state.profile.fats||null, water:state.profile.water||null, cadence:state.profile.cadence||'daily',
+      updated_at:new Date().toISOString()
+    }, {onConflict:'group_code,name'}).then(function(r){ if(r&&r.error) console.warn('profile sync failed', r.error); }).catch(function(e){ console.warn('profile sync failed', e); });
+  }
+  function pushLogRemote(rec){
+    if(!sb || !rec || !state.groupOk || !state.profile.name) return Promise.resolve();
+    return sb.from('logs').upsert({
+      group_code:GROUP_CODE, name:state.profile.name, date:rec.date, done:rec.done||0, tasks: rec.tasks||null,
+      waist:rec.waist||null, weight:rec.weight||null, updated_at:new Date().toISOString()
+    }, {onConflict:'group_code,name,date'}).then(function(r){ if(r&&r.error) console.warn('log sync failed', r.error); }).catch(function(e){ console.warn('log sync failed', e); });
+  }
+  function historyArrayForMigrate(){ var m=histMap(); return Object.keys(m).map(function(k){return m[k];}); }
+  function migrateLocalToRemote(){
+    if(!sb || state.migrated || !state.groupOk || !state.profile.name) return Promise.resolve();
+    var recs = historyArrayForMigrate();
+    return Promise.all(recs.map(pushLogRemote)).then(function(){ return pushProfileRemote(); }).then(function(){ state.migrated=true; save(); }).catch(function(e){ console.warn('migration failed', e); });
+  }
+  function pullRemoteIntoState(){
+    if(!sb || !state.groupOk || !state.profile.name) return Promise.resolve();
+    return sb.from('logs').select('*').eq('group_code',GROUP_CODE).eq('name',state.profile.name).order('date').then(function(r){
+      if(!r || r.error || !r.data) return;
+      var byDate={}; state.history.forEach(function(x){byDate[x.date]=x;});
+      r.data.forEach(function(row){
+        var existingPhoto = (byDate[row.date]&&byDate[row.date].photo)||null;
+        byDate[row.date] = {date:row.date, done:row.done, waist:row.waist, weight:row.weight, photo:existingPhoto, tasks:row.tasks||undefined};
+      });
+      state.history = Object.keys(byDate).map(function(k){return byDate[k];}).sort(function(a,b){return a.date<b.date?-1:1;});
+      var td = byDate[state.today.date];
+      if(td){
+        if(td.waist!=null) state.today.waist = td.waist;
+        if(td.weight!=null) state.today.weight = td.weight;
+        if(td.tasks && td.tasks.length===6) state.today.tasks = td.tasks;
+      }
+      save(); renderHome(); renderProgress(); renderTasks(); syncNumbers();
+    }).catch(function(e){ console.warn('pull failed', e); });
+  }
+  function computeStreakFor(logsByDate){
+    var s=0, d=new Date();
+    for(var k=0;k<120;k++){ var ds=fmtDate(d); if(logsByDate[ds]&&logsByDate[ds].done>=6) s++; else if(k>0) break; d.setDate(d.getDate()-1); }
+    return s;
+  }
+  function renderCrewReal(brothersRows, logsRows){
+    var byName={};
+    brothersRows.forEach(function(b){ byName[b.name] = {name:b.name, logs:{}}; });
+    logsRows.forEach(function(l){ if(!byName[l.name]) byName[l.name]={name:l.name, logs:{}}; byName[l.name].logs[l.date]=l; });
+    if(!Object.keys(byName).length){ renderCrew(); return; }
+    var todayDs = todayStr();
+    var stats = Object.keys(byName).map(function(n){
+      var b=byName[n]; var dates=Object.keys(b.logs);
+      var totalTicks=dates.reduce(function(a,d){return a+(b.logs[d].done||0);},0);
+      var pct = dates.length? Math.round(totalTicks/(dates.length*6)*100) : 0;
+      var sorted=dates.slice().sort();
+      var waistLost=0;
+      if(sorted.length>=2){ var first=b.logs[sorted[0]].waist, last=b.logs[sorted[sorted.length-1]].waist; if(first!=null&&last!=null) waistLost=first-last; }
+      var todayDone=(b.logs[todayDs]&&b.logs[todayDs].done)||0;
+      return [n, computeStreakFor(b.logs), pct, todayDone, waistLost];
+    });
+    var totDaysAll=0, totWaist=0, inToday=0;
+    Object.keys(byName).forEach(function(n){ Object.keys(byName[n].logs).forEach(function(d){ if(byName[n].logs[d].done>=6) totDaysAll++; }); });
+    stats.forEach(function(s){ if(s[3]>=6) inToday++; totWaist+=s[4]; });
+    document.getElementById('cToday').innerHTML=inToday+'<small>/'+stats.length+'</small>';
+    document.getElementById('cDays').textContent=totDaysAll;
+    document.getElementById('cWaist').innerHTML=r1(totWaist)+'<small>cm</small>';
+    var rows=stats.slice().sort(function(a,b){return b[1]-a[1] || b[2]-a[2];});
+    var lb=document.getElementById('lbList'); lb.innerHTML='';
+    rows.forEach(function(s,i){
+      var doneToday=s[3]>=6; var chipBg=doneToday?'var(--green-light)':'var(--bg)'; var chipCol=doneToday?'var(--green-dark)':'var(--muted)';
+      var d=document.createElement('div'); d.className='lb';
+      d.innerHTML='<span class="rk">'+(i+1)+'</span>'
+        +'<span class="ava">'+s[0].charAt(0)+'</span>'
+        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency · '+signed(-s[4])+'cm</small></div>'
+        +'<span class="streak">'+ic('i-flame','ic-s')+s[1]+'</span>'
+        +'<span class="today-chip" style="background:'+chipBg+'; color:'+chipCol+'">'+s[3]+'/6</span>';
+      lb.appendChild(d);
+    });
+    document.getElementById('crewBanner').style.display='none';
+  }
+  function loadCrewReal(){
+    if(!sb || !state.groupOk){ renderCrew(); return; }
+    Promise.all([
+      sb.from('brothers').select('*').eq('group_code',GROUP_CODE),
+      sb.from('logs').select('*').eq('group_code',GROUP_CODE)
+    ]).then(function(res){
+      var bRes=res[0], lRes=res[1];
+      if(!bRes || bRes.error || !bRes.data){ renderCrew(); return; }
+      renderCrewReal(bRes.data, (lRes&&lRes.data)||[]);
+    }).catch(function(){ renderCrew(); });
+  }
 
   // overlays
   function openHow(){ document.getElementById('howto').style.display='flex'; }
@@ -824,13 +948,18 @@
   document.getElementById('howGo').addEventListener('click', function(){ document.getElementById('howto').style.display='none'; show('profile'); });
 
   setCad(P.cadence||'daily'); renderTasks(); renderHome(); renderTimeline(); renderCompare(); renderProgress(); renderCrew();
+  document.querySelector('nav button[data-tab="crew"]').addEventListener('click', loadCrewReal);
 
-  // first run: pick who you are, then how it works
+  // sign-in flow: group code, then pick who you are (first time only), then bring their existing days together
   (function(){
+    function afterSignedIn(){
+      migrateLocalToRemote().then(function(){ return pullRemoteIntoState(); }).then(function(){ loadCrewReal(); });
+    }
     function chooseName(name){
       state.profile.name=name; state.profile.setup=true; save();
       pName.value=name; renderAvatar(); renderHome(); renderTasks(); renderProgress();
       document.getElementById('setup').style.display='none'; openHow();
+      afterSignedIn();
     }
     var wl=document.getElementById('whoList');
     CREW.forEach(function(m){ var b=document.createElement('button'); b.className='whobtn';
@@ -840,7 +969,22 @@
       document.getElementById('otherWrap').style.display='block'; this.style.display='none'; document.getElementById('otherName').focus(); });
     document.getElementById('otherGo').addEventListener('click', function(){
       var v=document.getElementById('otherName').value.trim(); if(v) chooseName(v); });
-    if(!state.profile.setup){ document.getElementById('setup').style.display='flex'; }
+
+    function afterCodeOk(){
+      document.getElementById('codeGate').style.display='none';
+      if(!state.profile.setup){ document.getElementById('setup').style.display='flex'; }
+      else { afterSignedIn(); }
+    }
+    document.getElementById('codeGo').addEventListener('click', function(){
+      var v=document.getElementById('groupCodeInput').value.trim().toLowerCase();
+      if(v===GROUP_CODE){ state.groupOk=true; save(); document.getElementById('codeError').style.display='none'; afterCodeOk(); }
+      else { document.getElementById('codeError').style.display='block'; }
+    });
+    document.getElementById('groupCodeInput').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('codeGo').click(); });
+
+    if(!state.groupOk){ document.getElementById('codeGate').style.display='flex'; }
+    else if(!state.profile.setup){ document.getElementById('setup').style.display='flex'; }
+    else { afterSignedIn(); }
   })();
 </script>
 </body>
