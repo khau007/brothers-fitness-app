@@ -273,7 +273,6 @@
       </div>
       <div class="row3">
         <div class="stat"><p class="k">Weight</p><p class="v" id="hWeight">—</p><p class="d" id="hWeightD">&nbsp;</p></div>
-        <div class="stat"><p class="k">Waist</p><p class="v" id="hWaist">—</p><p class="d" id="hWaistD">&nbsp;</p></div>
         <div class="stat"><p class="k">Streak</p><p class="v" id="hStreak">0</p><p class="d">days</p></div>
       </div>
       <div class="widget">
@@ -299,7 +298,6 @@
       </label>
       <p class="sech" id="numTitle" style="margin-top:4px;">Today's numbers</p>
       <div class="numfield"><label>Weight</label><div class="val"><input id="weight" type="number" step="0.1" inputmode="decimal" value="84" /><span class="u">kg</span></div></div>
-      <div class="numfield"><label>Waist</label><div class="val"><input id="waist" type="number" step="0.1" inputmode="decimal" value="86" /><span class="u">cm</span></div></div>
       <button class="btn" id="save">Save check-in</button>
       <p class="sech">Before and after</p>
       <div class="compare" id="compare"></div>
@@ -341,7 +339,6 @@
         <p class="rt">This week</p>
         <div class="rr">
           <div><p class="rn" id="rDays">0/7</p><p class="rl">days complete</p></div>
-          <div><p class="rn" id="rWaist">0</p><p class="rl">waist change</p></div>
           <div><p class="rn" id="rWeight">0</p><p class="rl">weight change</p></div>
         </div>
       </div>
@@ -360,11 +357,6 @@
         <p class="cap">Watch the weekly trend, not the daily bounce. Weight moves with water and food day to day.</p>
       </div>
       <div class="chart">
-        <div class="ch-top"><b>Waist trend (cm)</b><span class="now" id="waNow">— cm</span></div>
-        <div id="waistChart"></div>
-        <p class="cap">Your waist usually moves before the scale. This is the truest sign of fat loss.</p>
-      </div>
-      <div class="chart">
         <div class="ch-top"><b>75 day grid</b><span style="font-size:12px; color:var(--muted);" id="gridCount">0 done</span></div>
         <div class="grid75" id="grid75"></div>
         <div class="glegend"><span><i style="background:var(--green)"></i> All 6</span><span><i style="background:var(--blue)"></i> Partly</span><span><i style="background:#e6b8b8"></i> Missed</span><span><i style="background:var(--bg)"></i> To come</span></div>
@@ -379,8 +371,7 @@
         </div>
         <div class="bmiread"><span class="n" id="bmiN">0</span><span class="cat" id="bmiCat">—</span></div>
         <p class="bmiline" id="bmiRange"></p>
-        <p class="bmiline" id="whtr"></p>
-        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> These use the higher BMI cut-offs NZ health guidance applies for Pacific and Māori peoples, who carry more muscle. Waist-to-height is the fairer guide, aim under 0.5.</p>
+        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> These use the higher BMI cut-offs NZ health guidance applies for Pacific and Māori peoples, who carry more muscle.</p>
       </div>
       <p class="sech">Photo analysis</p>
       <div class="read ai">
@@ -401,7 +392,6 @@
       <div class="row3">
         <div class="stat"><p class="k">Checked in today</p><p class="v" id="cToday">0<small>/7</small></p><p class="d">the boys</p></div>
         <div class="stat"><p class="k">Days done</p><p class="v" id="cDays">0</p><p class="d">combined</p></div>
-        <div class="stat"><p class="k">Waist lost</p><p class="v" id="cWaist">0<small>cm</small></p><p class="d">combined</p></div>
       </div>
       <p class="sech">Leaderboard · by streak</p>
       <div id="lbList"></div>
@@ -488,7 +478,7 @@
       <h2 style="text-align:center;">How it works</h2>
       <p class="lead" style="text-align:center;">75 days. Six things a day. Do them, tick them, watch yourself change.</p>
       <div class="howrow"><div class="n">1</div><p><b>Each day, tick your six:</b> workout, protein, 3L water, 7+ hours sleep, daily prayer, and read a chapter.</p></div>
-      <div class="howrow"><div class="n">2</div><p><b>Check in:</b> add a photo and log your weight and waist. Daily or weekly, your choice.</p></div>
+      <div class="howrow"><div class="n">2</div><p><b>Check in:</b> add a photo and log your weight. Daily or weekly, your choice.</p></div>
       <div class="howrow"><div class="n">3</div><p><b>Watch your dashboard:</b> your trends, your streak, and the 75 day grid fill in.</p></div>
       <div class="howrow"><div class="n">4</div><p><b>Back each other:</b> the crew leaderboard keeps everyone honest and moving.</p></div>
       <div class="howrow"><div class="n">5</div><p><b>Miss a day?</b> Mark it and keep going. Tap a past day on the grid to fix it. No restart, just don't quit.</p></div>
@@ -603,7 +593,7 @@
   ];
   var TIPS = [
     'Aim for a palm of protein at every meal. It keeps you full and protects muscle while you lean down.',
-    'Most fat loss shows on your waist before the scale moves. Trust the tape measure.',
+    'The scale bounces day to day with water and food. Judge your progress on the weekly trend, not one reading.',
     'Sleep is where you recover. Under 7 hours and your hunger hormones work against you the next day.',
     'Drink a glass of water before each meal. It helps you eat to fullness, not past it.',
     'A 20 minute walk after dinner blunts the sugar spike and adds easy movement. Underrated.',
@@ -619,7 +609,7 @@
   ];
 
   var KEY = 'brothers75v1';
-  var START = new Date(2026,6,6);
+  var START = new Date(2026,6,13);
   function todayStr(){ var n=new Date(); return n.getFullYear()+'-'+('0'+(n.getMonth()+1)).slice(-2)+'-'+('0'+n.getDate()).slice(-2); }
   function fmtDate(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
   function midnight(d){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
@@ -641,7 +631,7 @@
   save();
 
   var curDay = Math.floor((midnight(new Date()) - START)/86400000)+1;
-  document.getElementById('dayBadge').textContent = curDay<1 ? 'Starts Mon 6 Jul' : (curDay>75 ? 'Complete' : 'Day '+curDay+' of 75');
+  document.getElementById('dayBadge').textContent = curDay<1 ? 'Starts Mon 13 Jul' : (curDay>75 ? 'Complete' : 'Day '+curDay+' of 75');
 
   (function(){
     var doy = Math.floor((midnight(new Date()) - new Date(new Date().getFullYear(),0,0))/86400000);
@@ -696,12 +686,10 @@
     document.getElementById('hWeightD').innerHTML = dw>0
       ? ic('i-arrow-dr','ic-s')+' '+dw+'kg'+(goalW?' · goal '+r1(goalW)+'kg':'')
       : (goalW ? 'goal '+r1(goalW)+'kg' : '&nbsp;');
-    document.getElementById('hWaist').innerHTML = r1(state.today.waist)+'<small>cm</small>';
-    document.getElementById('hWaistD').innerHTML = 'goal '+(state.profile.goalWaist||82)+'cm';
   }
 
-  var waistI=document.getElementById('waist'), weightI=document.getElementById('weight');
-  function syncNumbers(){ weightI.value=state.today.weight; waistI.value=state.today.waist; }
+  var weightI=document.getElementById('weight');
+  function syncNumbers(){ weightI.value=state.today.weight; }
   syncNumbers();
 
   var photoTitle=document.getElementById('photoTitle'), numTitle=document.getElementById('numTitle');
@@ -737,12 +725,12 @@
     var el=document.getElementById('compare'); var photos=photoRecs();
     if(photos.length<2){ el.innerHTML='<div class="cap" style="padding:6px 0">Add photos over the weeks and your week one versus now shows here.</div>'; return; }
     var a=photos[0], b=photos[photos.length-1];
-    el.innerHTML='<div class="c"><div class="ph"><img src="'+a.photo+'" alt="First photo"/></div><p class="lab">'+a.date.slice(5)+'</p><p class="num">'+r1(a.waist)+' cm</p></div>'
-      +'<div class="c"><div class="ph"><img src="'+b.photo+'" alt="Latest photo"/></div><p class="lab">Now</p><p class="num">'+r1(b.waist)+' cm</p></div>';
+    el.innerHTML='<div class="c"><div class="ph"><img src="'+a.photo+'" alt="First photo"/></div><p class="lab">'+a.date.slice(5)+'</p><p class="num">'+r1(a.weight)+' kg</p></div>'
+      +'<div class="c"><div class="ph"><img src="'+b.photo+'" alt="Latest photo"/></div><p class="lab">Now</p><p class="num">'+r1(b.weight)+' kg</p></div>';
   }
 
   document.getElementById('save').addEventListener('click',function(){
-    state.today.weight=Number(weightI.value)||state.today.weight; state.today.waist=Number(waistI.value)||state.today.waist; upsertHistory(); save();
+    state.today.weight=Number(weightI.value)||state.today.weight; upsertHistory(); save();
     renderHome(); renderProgress(); renderCompare();
     syncToday();
     this.textContent='Check-in saved ✓'; this.style.background='#0F6E56';
@@ -761,9 +749,6 @@
     var c=document.getElementById('bmiCat'); c.textContent=cat; c.style.color=col; c.style.background=bg;
     var lo=Math.round(18.5*h*h), hi=Math.round(25.9*h*h);
     document.getElementById('bmiRange').textContent='Healthy weight for your height is about '+lo+' to '+hi+' kg.';
-    var rr=Math.round((Number(waistI.value)||state.today.waist)/Number(bH.value)*100)/100;
-    var rstat = rr<0.5?'healthy':(rr<0.6?'increased risk':'high risk');
-    document.getElementById('whtr').textContent='Waist-to-height ratio '+rr.toFixed(2)+' · '+rstat+'.';
   }
   bH.addEventListener('input',bmiCalc); bW.addEventListener('input',bmiCalc);
 
@@ -784,12 +769,11 @@
       +'<text x="'+pad+'" y="'+(H-3)+'" font-size="10" fill="#a0a29c">'+r1(mn)+'</text></svg>';
   }
   function weekRecap(){
-    var m=histMap(); var days=0, first=null, last=null, firstW=null, lastW=null;
+    var m=histMap(); var days=0, firstW=null, lastW=null;
     for(var i=6;i>=0;i--){ var d=new Date(); d.setDate(d.getDate()-i); var ds=fmtDate(d); var r=m[ds]; if(!r) continue;
-      if(r.done>=6) days++; if(first===null){first=r.waist; firstW=r.weight;} last=r.waist; lastW=r.weight; }
-    var wa = (first!==null&&last!==null)? last-first : 0;
+      if(r.done>=6) days++; if(firstW===null){firstW=r.weight;} lastW=r.weight; }
     var we = (firstW!==null&&lastW!==null)? lastW-firstW : 0;
-    return {days:days, waist:wa, weight:we};
+    return {days:days, weight:we};
   }
   function renderProgress(){
     bH.value=state.profile.height||178; bW.value=state.today.weight; bmiCalc();
@@ -799,11 +783,10 @@
     document.getElementById('goalPct').textContent=pct+'%';
     document.getElementById('goalFill').style.width=pct+'%';
     document.getElementById('goalTip').textContent = pct<=0
-      ? 'Log your check-ins daily. Hold protein near '+(state.profile.protein||160)+' g and water at '+(state.profile.water||3)+' L, and you will see the waist move first.'
+      ? 'Log your check-ins daily. Hold protein near '+(state.profile.protein||160)+' g and water at '+(state.profile.water||3)+' L, and you will see the scale move.'
       : 'You are '+pct+'% to your '+r1(goal)+' kg goal. Keep the 6 daily ticks, protein near '+(state.profile.protein||160)+' g, and add one extra walk on rest days.';
     var rc=weekRecap();
     document.getElementById('rDays').textContent=rc.days+'/7';
-    document.getElementById('rWaist').textContent=(rc.waist?signed(rc.waist):'0')+' cm';
     document.getElementById('rWeight').textContent=(rc.weight?signed(rc.weight):'0')+' kg';
     var m=histMap(); var hist=Object.keys(m).map(function(k){return m[k];}).sort(function(a,b){return a.date<b.date?-1:1;});
     var doneDays=hist.filter(function(r){return r.done>=6;}).length;
@@ -812,10 +795,8 @@
     document.getElementById('dDone').innerHTML=doneDays+'<small>/75</small>';
     document.getElementById('dPct').innerHTML=(hist.length?Math.round(totalTicks/(hist.length*6)*100):0)+'<small>%</small>';
     document.getElementById('wNow').textContent=r1(state.today.weight)+' kg';
-    document.getElementById('waNow').textContent=r1(state.today.waist)+' cm';
     var last=hist.slice(-10);
     document.getElementById('weightChart').innerHTML=lineChart(last,'weight');
-    document.getElementById('waistChart').innerHTML=lineChart(last,'waist');
     var g=document.getElementById('grid75'); g.innerHTML=''; var gd=0;
     for(var d=1; d<=75; d++){
       var cell=document.createElement('div'); cell.className='cell';
@@ -856,17 +837,16 @@
   function renderCrew(){
     var rows=CREWSTATS.slice().sort(function(a,b){return b[1]-a[1] || b[2]-a[2];});
     var lb=document.getElementById('lbList'); lb.innerHTML='';
-    var totDays=0, totWaist=0, inToday=0;
-    CREWSTATS.forEach(function(s){ totDays+=s[1]; totWaist+=s[4]; if(s[3]>=6) inToday++; });
+    var totDays=0, inToday=0;
+    CREWSTATS.forEach(function(s){ totDays+=s[1]; if(s[3]>=6) inToday++; });
     document.getElementById('cToday').innerHTML=inToday+'<small>/7</small>';
     document.getElementById('cDays').textContent=totDays;
-    document.getElementById('cWaist').innerHTML=r1(totWaist)+'<small>cm</small>';
     rows.forEach(function(s,i){
       var doneToday=s[3]>=6; var chipBg=doneToday?'var(--green-light)':'var(--bg)'; var chipCol=doneToday?'var(--green-dark)':'var(--muted)';
       var d=document.createElement('div'); d.className='lb';
       d.innerHTML='<span class="rk">'+(i+1)+'</span>'
         +'<span class="ava">'+s[0].charAt(0)+'</span>'
-        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency · -'+r1(s[4])+'cm</small></div>'
+        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency</small></div>'
         +'<span class="streak">'+ic('i-flame','ic-s')+s[1]+'</span>'
         +'<span class="today-chip" style="background:'+chipBg+'; color:'+chipCol+'">'+s[3]+'/6</span>';
       lb.appendChild(d);
@@ -983,18 +963,14 @@
       var b=byName[n]; var dates=Object.keys(b.logs);
       var totalTicks=dates.reduce(function(a,d){return a+(b.logs[d].done||0);},0);
       var pct = dates.length? Math.round(totalTicks/(dates.length*6)*100) : 0;
-      var sorted=dates.slice().sort();
-      var waistLost=0;
-      if(sorted.length>=2){ var first=b.logs[sorted[0]].waist, last=b.logs[sorted[sorted.length-1]].waist; if(first!=null&&last!=null) waistLost=first-last; }
       var todayDone=(b.logs[todayDs]&&b.logs[todayDs].done)||0;
-      return [n, computeStreakFor(b.logs), pct, todayDone, waistLost];
+      return [n, computeStreakFor(b.logs), pct, todayDone];
     });
-    var totDaysAll=0, totWaist=0, inToday=0;
+    var totDaysAll=0, inToday=0;
     Object.keys(byName).forEach(function(n){ Object.keys(byName[n].logs).forEach(function(d){ if(byName[n].logs[d].done>=6) totDaysAll++; }); });
-    stats.forEach(function(s){ if(s[3]>=6) inToday++; totWaist+=s[4]; });
+    stats.forEach(function(s){ if(s[3]>=6) inToday++; });
     document.getElementById('cToday').innerHTML=inToday+'<small>/'+stats.length+'</small>';
     document.getElementById('cDays').textContent=totDaysAll;
-    document.getElementById('cWaist').innerHTML=r1(totWaist)+'<small>cm</small>';
     var rows=stats.slice().sort(function(a,b){return b[1]-a[1] || b[2]-a[2];});
     var lb=document.getElementById('lbList'); lb.innerHTML='';
     rows.forEach(function(s,i){
@@ -1002,7 +978,7 @@
       var d=document.createElement('div'); d.className='lb';
       d.innerHTML='<span class="rk">'+(i+1)+'</span>'
         +'<span class="ava">'+s[0].charAt(0)+'</span>'
-        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency · '+signed(-s[4])+'cm</small></div>'
+        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency</small></div>'
         +'<span class="streak">'+ic('i-flame','ic-s')+s[1]+'</span>'
         +'<span class="today-chip" style="background:'+chipBg+'; color:'+chipCol+'">'+s[3]+'/6</span>';
       lb.appendChild(d);
