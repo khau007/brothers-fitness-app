@@ -9,6 +9,7 @@
   :root{
     --green:#1D9E75; --green-dark:#0F6E56; --green-light:#E1F5EE;
     --blue:#3a86d4; --amber:#EF9F27; --coral:#D85A30;
+    --gold:#C88A2E; --gold-light:#FBF0DC; --gold-dark:#5c4114;
     --bg:#f5f6f4; --card:#ffffff; --line:#e7e8e4;
     --text:#1b1c1a; --muted:#6f716b; --hint:#a0a29c;
   }
@@ -185,6 +186,41 @@
   .lb .streak{display:flex; align-items:center; gap:3px; font-size:14px; font-weight:600; color:var(--coral);}
   .lb .streak .ic{width:15px; height:15px; color:var(--coral);}
 
+  .seg2{display:flex; background:var(--bg); border-radius:11px; padding:3px; gap:3px; margin-bottom:16px;}
+  .seg2 button{flex:1; border:none; background:none; padding:9px; font-size:13px; border-radius:9px; cursor:pointer; color:var(--muted); font-weight:500;}
+  .seg2 button.on{background:#fff; color:var(--text); font-weight:600; box-shadow:0 1px 2px rgba(0,0,0,.07);}
+
+  .pulse{background:linear-gradient(180deg, var(--green-dark), #0a5847); color:#eafff6; border-radius:14px; padding:15px 17px; margin-bottom:14px;}
+  .pulse .pulselabel{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#8fe6c9; margin:0 0 8px;}
+  .pulse .pulserow{display:flex; align-items:baseline; gap:8px;}
+  .pulse .pulsenum{font-size:28px; font-weight:600; line-height:1;}
+  .pulse .pulseof{font-size:13px; color:#a8ecd3;}
+  .pulse .pulsebar{height:6px; background:rgba(255,255,255,.18); border-radius:6px; margin-top:11px; overflow:hidden;}
+  .pulse .pulsefill{display:block; height:100%; background:#f5c96b; border-radius:6px;}
+  .pulse .pulsemsg{font-size:12px; color:#c8f2e1; margin:9px 0 0;}
+
+  .mvp{border:1px solid var(--gold); background:var(--gold-light); border-radius:14px; padding:12px 14px; margin-bottom:16px; display:flex; align-items:center; gap:12px;}
+  .mvp .mvpicon{width:32px; height:32px; border-radius:10px; background:var(--gold); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .mvp .mvpicon svg{width:17px; height:17px;}
+  .mvp .mvpname{font-size:14px; font-weight:600; color:var(--gold-dark); margin:0;}
+  .mvp .mvpline{font-size:12px; color:#8a6017; margin:1px 0 0;}
+
+  .crewsec{margin:18px 0 6px;}
+  .crewsec .cshead{display:flex; align-items:center; gap:8px; margin-bottom:2px;}
+  .crewsec .cshead .dot{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .crewsec .cshead h3{font-size:12px; font-weight:600; margin:0; text-transform:uppercase; letter-spacing:.04em; color:var(--muted);}
+
+  .crow{display:flex; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid var(--line);}
+  .cava{width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; background:var(--green-light); color:var(--green-dark);}
+  .cnm{flex:1; min-width:0;} .cnm p{margin:0; font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;} .cnm small{font-size:12px; color:var(--muted);}
+  .cflame{display:flex; align-items:center; gap:3px; font-size:14px; font-weight:600; flex-shrink:0;}
+  .cflame.hot{color:var(--coral);} .cflame.cool{color:var(--hint);}
+  .cflame svg{width:15px; height:15px;}
+
+  .nudgecard{background:var(--bg); border-radius:10px; padding:11px 13px; margin-top:8px; font-size:12.5px; color:var(--muted); line-height:1.5; display:flex; gap:8px; align-items:flex-start;}
+  .nudgecard svg{width:15px; height:15px; color:var(--coral); flex-shrink:0; margin-top:1px;}
+  .nudgecard b{color:var(--text); font-weight:600;}
+
   .pava{width:72px; height:72px; border-radius:50%; background:var(--green-light); color:var(--green-dark);
     display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:600; overflow:hidden; cursor:pointer; position:relative; flex-shrink:0;}
   .pava img{width:100%; height:100%; object-fit:cover;}
@@ -257,6 +293,7 @@
     <div class="brand"><div class="logo"><svg class="ic"><use href="#i-flame"/></svg></div><b>75 Hard · The Boys</b></div>
     <div class="hright">
       <span class="daybadge" id="dayBadge">Day 1</span>
+      <button class="help" id="profileBtn" aria-label="Your profile"><svg class="ic"><use href="#i-user"/></svg></button>
       <button class="help" id="helpBtn" aria-label="How it works"><svg class="ic"><use href="#i-help"/></svg></button>
     </div>
   </header>
@@ -273,6 +310,7 @@
       </div>
       <div class="row3">
         <div class="stat"><p class="k">Weight</p><p class="v" id="hWeight">—</p><p class="d" id="hWeightD">&nbsp;</p></div>
+        <div class="stat"><p class="k">Food</p><p class="v" id="hFood">0<small>/0</small></p><p class="d">kcal today</p></div>
         <div class="stat"><p class="k">Streak</p><p class="v" id="hStreak">0</p><p class="d">days</p></div>
       </div>
       <div class="widget">
@@ -334,67 +372,69 @@
     <!-- DASHBOARD -->
     <section class="screen" data-screen="progress">
       <h1>Your dashboard</h1>
-      <p class="sub">Graphs and trends, easy to read</p>
-      <div class="recap">
-        <p class="rt">This week</p>
-        <div class="rr">
-          <div><p class="rn" id="rDays">0/7</p><p class="rl">days complete</p></div>
-          <div><p class="rn" id="rWeight">0</p><p class="rl">weight change</p></div>
-        </div>
-      </div>
-      <div class="row3">
-        <div class="stat"><p class="k">Streak</p><p class="v" id="dStreak">0</p><p class="d">days</p></div>
-        <div class="stat"><p class="k">Days done</p><p class="v" id="dDone">0<small>/75</small></p><p class="d">all 6 tasks</p></div>
-        <div class="stat"><p class="k">Consistency</p><p class="v" id="dPct">0<small>%</small></p><p class="d">of tasks</p></div>
-      </div>
-      <div class="goal">
-        <div class="top"><span id="goalLabel">Weight goal</span><span id="goalPct">0%</span></div>
-        <div class="track"><div class="fill" id="goalFill" style="width:0%"></div></div>
-      </div>
-      <div class="chart">
-        <div class="ch-top"><b>Weight trend (kg)</b><span class="now" id="wNow">— kg</span></div>
-        <div id="weightChart"></div>
-        <p class="cap">Watch the weekly trend, not the daily bounce. Weight moves with water and food day to day.</p>
-      </div>
-      <div class="chart">
-        <div class="ch-top"><b>75 day grid</b><span style="font-size:12px; color:var(--muted);" id="gridCount">0 done</span></div>
-        <div class="grid75" id="grid75"></div>
-        <div class="glegend"><span><i style="background:var(--green)"></i> All 6</span><span><i style="background:var(--blue)"></i> Partly</span><span><i style="background:#e6b8b8"></i> Missed</span><span><i style="background:var(--bg)"></i> To come</span></div>
-        <p class="cap">Tap a past day to fix it if you forgot to log.</p>
-      </div>
-      <div class="bmi">
-        <b style="font-size:15px;">BMI and healthy weight</b>
-        <p class="bmiline" style="margin-top:2px;">Adjusted for Pacific and Māori build</p>
-        <div class="two" style="margin-top:12px;">
-          <div><label class="fld">Height (cm)</label><input type="number" id="bH" step="0.1" value="178" /></div>
-          <div><label class="fld">Weight (kg)</label><input type="number" id="bW" step="0.1" value="84" /></div>
-        </div>
-        <div class="bmiread"><span class="n" id="bmiN">0</span><span class="cat" id="bmiCat">—</span></div>
-        <p class="bmiline" id="bmiRange"></p>
-        <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> These use the higher BMI cut-offs NZ health guidance applies for Pacific and Māori peoples, who carry more muscle.</p>
-      </div>
-      <p class="sech">Photo analysis</p>
-      <div class="read ai">
-        <p class="t"><svg class="ic ic-s"><use href="#i-scan"/></svg> Coming with the shared version</p>
-        <p>The AI photo read is not switched on yet. When the shared version lands, it will compare your weekly photos and give science-based feedback on what is changing and where to focus.</p>
-      </div>
-      <div class="read tip2">
-        <p class="t"><svg class="ic ic-s"><use href="#i-target"/></svg> How to reach your goal</p>
-        <p id="goalTip">Log your first check-in and I will show you what to hold and where to push.</p>
-      </div>
-    </section>
+      <p class="sub">Graphs, trends, and how the crew's tracking</p>
 
-    <!-- CREW -->
-    <section class="screen" data-screen="crew">
-      <h1>The crew</h1>
-      <p class="sub">How the boys are tracking, together</p>
-      <div class="banner" id="crewBanner"><svg class="ic ic-s"><use href="#i-info"/></svg><span>Preview with sample numbers. This goes live with real data once everyone is on the shared version.</span></div>
-      <div class="row3">
-        <div class="stat"><p class="k">Checked in today</p><p class="v" id="cToday">0<small>/7</small></p><p class="d">the boys</p></div>
-        <div class="stat"><p class="k">Days done</p><p class="v" id="cDays">0</p><p class="d">combined</p></div>
+      <div class="seg2" id="dashToggle">
+        <button class="on" data-view="me">Me</button>
+        <button data-view="crew">Crew</button>
       </div>
-      <p class="sech">Leaderboard · by streak</p>
-      <div id="lbList"></div>
+
+      <div id="dashMe">
+        <div class="recap">
+          <p class="rt">This week</p>
+          <div class="rr">
+            <div><p class="rn" id="rDays">0/7</p><p class="rl">days complete</p></div>
+            <div><p class="rn" id="rWeight">0</p><p class="rl">weight change</p></div>
+          </div>
+          <p id="recapTip" style="font-size:12.5px; color:#c8f2e1; margin:12px 0 0; line-height:1.5;">Log your first check-in and I will show you what to hold and where to push.</p>
+        </div>
+        <div class="row3">
+          <div class="stat"><p class="k">Streak</p><p class="v" id="dStreak">0</p><p class="d">days</p></div>
+          <div class="stat"><p class="k">Days done</p><p class="v" id="dDone">0<small>/75</small></p><p class="d">all 6 tasks</p></div>
+          <div class="stat"><p class="k">Consistency</p><p class="v" id="dPct">0<small>%</small></p><p class="d">of tasks</p></div>
+        </div>
+        <div class="goal">
+          <div class="top"><span id="goalLabel">Weight goal</span><span id="goalPct">0%</span></div>
+          <div class="track"><div class="fill" id="goalFill" style="width:0%"></div></div>
+        </div>
+        <div class="chart">
+          <div class="ch-top"><b>Weight trend (kg)</b><span class="now" id="wNow">— kg</span></div>
+          <div id="weightChart"></div>
+          <p class="cap">Watch the weekly trend, not the daily bounce. Weight moves with water and food day to day.</p>
+        </div>
+        <div class="chart">
+          <div class="ch-top"><b>75 day grid</b><span style="font-size:12px; color:var(--muted);" id="gridCount">0 done</span></div>
+          <div class="grid75" id="grid75"></div>
+          <div class="glegend"><span><i style="background:var(--green)"></i> All 6</span><span><i style="background:var(--blue)"></i> Partly</span><span><i style="background:#e6b8b8"></i> Missed</span><span><i style="background:var(--bg)"></i> To come</span></div>
+          <p class="cap">Tap a past day to fix it if you forgot to log.</p>
+        </div>
+        <div class="bmi">
+          <b style="font-size:15px;">BMI and healthy weight</b>
+          <p class="bmiline" style="margin-top:2px;">Adjusted for Pacific and Māori build</p>
+          <div class="two" style="margin-top:12px;">
+            <div><label class="fld">Height (cm)</label><input type="number" id="bH" step="0.1" value="178" /></div>
+            <div><label class="fld">Weight (kg)</label><input type="number" id="bW" step="0.1" value="84" /></div>
+          </div>
+          <div class="bmiread"><span class="n" id="bmiN">0</span><span class="cat" id="bmiCat">—</span></div>
+          <p class="bmiline" id="bmiRange"></p>
+          <p class="bmiline"><svg class="ic ic-s"><use href="#i-info"/></svg> These use the higher BMI cut-offs NZ health guidance applies for Pacific and Māori peoples, who carry more muscle.</p>
+        </div>
+      </div>
+
+      <div id="dashCrew" style="display:none;">
+        <div class="banner" id="crewBanner"><svg class="ic ic-s"><use href="#i-info"/></svg><span>Preview with sample numbers. This goes live with real data once everyone is on the shared version.</span></div>
+        <div class="pulse">
+          <p class="pulselabel">Crew pulse this week</p>
+          <div class="pulserow"><span class="pulsenum" id="pulseNum">0%</span><span class="pulseof">of ticks hit, across all <span id="pulseCount">0</span> of you</span></div>
+          <div class="pulsebar"><span class="pulsefill" id="pulseFill" style="width:0%"></span></div>
+          <p class="pulsemsg" id="pulseMsg">Log a few days and your crew pulse shows here.</p>
+        </div>
+        <div class="mvp" id="mvpCard" style="display:none;">
+          <div class="mvpicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v4a4 4 0 0 1-8 0V4z"/><path d="M8 4H5a2 2 0 0 0 2 4"/><path d="M16 4h3a2 2 0 0 1-2 4"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4v4h-4z"/></svg></div>
+          <div class="mvptxt"><p class="mvpname" id="mvpName"></p><p class="mvpline" id="mvpLine"></p></div>
+        </div>
+        <div id="crewGroups"></div>
+      </div>
     </section>
 
     <!-- PROFILE -->
@@ -440,8 +480,6 @@
     <button data-tab="checkin"><svg class="ic"><use href="#i-check-c"/></svg><span>Check-in</span></button>
     <button data-tab="food"><svg class="ic"><use href="#i-food"/></svg><span>Food</span></button>
     <button data-tab="progress"><svg class="ic"><use href="#i-chart"/></svg><span>Dashboard</span></button>
-    <button data-tab="crew"><svg class="ic"><use href="#i-users"/></svg><span>Crew</span></button>
-    <button data-tab="profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
   </nav>
 
   <!-- CODE GATE -->
@@ -558,39 +596,82 @@
     ['Peter Haufano','@petehauf18'],['Kalolo Haufano','@haufano'],
     ['Timothy Dewandran','@timothy.dewandran.2025']
   ];
-  // sample crew stats for the preview leaderboard (name, streak, consistency %, today done, waist lost cm)
+  // sample crew stats for the preview leaderboard (name, streak, all-time %, today done, this-week %)
   var CREWSTATS = [
-    ['Pasitaua Haufano',12,95,6,3.5],['Kalolo Haufano',12,92,6,4.0],['Peter Haufano',12,90,6,3.2],
-    ['Timothy Dewandran',11,88,5,2.6],['Jimmy Kaufisi',10,85,6,3.0],['Peter Finch',9,80,4,2.1],['Jay Larry',8,78,3,1.6]
+    ['Pasitaua Haufano',12,95,6,96],['Kalolo Haufano',12,92,6,90],['Peter Haufano',12,90,6,85],
+    ['Timothy Dewandran',11,88,5,78],['Jimmy Kaufisi',10,85,6,90],['Peter Finch',0,45,2,35],['Jay Larry',0,30,0,20]
   ];
+  // 67 quotes, interleaved across sources so no two days in a row repeat the same flavour.
+  // 8 more are drafted but held back pending Kalolo's review: the Hormozi line (wording to confirm)
+  // and 7 Pacific value-lines (Tongan + Samoan) that need family knowledge, not a guess.
   var QUOTES = [
     ['In the middle of difficulty lies opportunity.','Albert Einstein'],
-    ['Try not to become a person of success, but rather try to become a person of value.','Albert Einstein'],
-    ['I hated every minute of training, but I said, don’t quit. Suffer now and live the rest of your life as a champion.','Muhammad Ali'],
-    ['Don’t count the days. Make the days count.','Muhammad Ali'],
-    ['You are in danger of living a life so comfortable and soft that you will die without ever realising your true potential.','David Goggins'],
-    ['It always seems impossible until it’s done.','Nelson Mandela'],
-    ['It is hard to fail, but it is worse never to have tried to succeed.','Theodore Roosevelt'],
-    ['I fear not the man who has practised 10,000 kicks once, but the man who has practised one kick 10,000 times.','Bruce Lee'],
-    ['Everything negative, pressure, challenges, is all an opportunity for me to rise.','Kobe Bryant'],
     ['You have power over your mind, not outside events. Realise this, and you will find strength.','Marcus Aurelius'],
-    ['Difficulties strengthen the mind, as labour does the body.','Seneca'],
-    ['We are what we repeatedly do. Excellence is not an act, but a habit.','Will Durant, on Aristotle'],
-    ['You do not rise to the level of your goals. You fall to the level of your systems.','James Clear'],
-    ['Take care of your body. It’s the only place you have to live.','Jim Rohn'],
-    ['It does not matter how slowly you go as long as you do not stop.','Confucius'],
-    ['The impediment to action advances action. What stands in the way becomes the way.','Marcus Aurelius'],
-    ['Discipline equals freedom.','Jocko Willink'],
+    ['Don’t count the days. Make the days count.','Muhammad Ali'],
     ['Strength does not come from winning. Your struggles develop your strengths.','Arnold Schwarzenegger'],
-    ['Summer bodies are made in the winter.','The Boys'],
+    ['The past is behind, learn from it. The future is ahead, prepare for it. The present is here, live it.','Thomas S. Monson'],
+    ['He aha te mea nui o te ao? He tangata, he tangata, he tangata.','Māori whakataukī — what is the most important thing in the world? It is people, it is people, it is people.'],
+    ['‘Otua mo Tonga ko hoku tofi‘a.','Kingdom of Tonga, national motto — God and Tonga are my inheritance'],
+    ['Try not to become a person of success, but rather try to become a person of value.','Albert Einstein'],
+    ['The impediment to action advances action. What stands in the way becomes the way.','Marcus Aurelius'],
+    ['I hated every minute of training, but I said, don’t quit. Suffer now and live the rest of your life as a champion.','Muhammad Ali'],
     ['The only place success comes before work is in the dictionary.','Vince Lombardi'],
-    ['The cost of staying the same is always higher than the cost of change, you just don’t see the bill until later.','Alex Hormozi (check wording)'],
     ['Without hard work, nothing grows but weeds.','Gordon B. Hinckley'],
+    ['Nāu te rourou, nāku te rourou, ka ora ai te iwi.','Māori whakataukī — with your food basket and my food basket, the people will thrive.'],
+    ['It always seems impossible until it’s done.','Nelson Mandela'],
+    ['Difficulties strengthen the mind, as labour does the body.','Seneca'],
+    ['He who is not courageous enough to take risks will accomplish nothing in life.','Muhammad Ali'],
+    ['Summer bodies are made in the winter.','The Boys'],
+    ['You can’t build a great building on a weak foundation.','Gordon B. Hinckley'],
+    ['Ka pū te ruha, ka hao te rangatahi.','Māori whakataukī — as the old net withers away, another is remade.'],
+    ['The greatest glory in living lies not in never falling, but in rising every time we fall.','Nelson Mandela'],
+    ['We are what we repeatedly do. Excellence is not an act, but a habit.','Will Durant, on Aristotle'],
+    ['I fear not the man who has practised 10,000 kicks once, but the man who has practised one kick 10,000 times.','Bruce Lee'],
     ['It is your reaction to adversity, not the adversity itself, that determines how your life’s story will develop.','Dieter F. Uchtdorf'],
+    ['Mā te huruhuru ka rere te manu.','Māori whakataukī — adorn the bird with feathers so it can fly.'],
+    ['It is hard to fail, but it is worse never to have tried to succeed.','Theodore Roosevelt'],
+    ['Victorious warriors win first, then go to war. Defeated warriors go to war first, then seek to win.','Sun Tzu, The Art of War'],
+    ['Everything negative, pressure, challenges, is all an opportunity for me to rise.','Kobe Bryant'],
+    ['When we put God first, all other things fall into their proper place.','Ezra Taft Benson'],
+    ['Kia whakatōmuri te haere whakamua.','Māori whakataukī — I walk backwards into the future with my eyes fixed on the past.'],
+    ['The credit belongs to the man who is actually in the arena.','Theodore Roosevelt'],
+    ['You do not rise to the level of your goals. You fall to the level of your systems.','James Clear'],
+    ['Rest at the end, not in the middle.','Kobe Bryant'],
     ['The joy we feel has little to do with the circumstances of our lives and everything to do with the focus of our lives.','Russell M. Nelson'],
+    ['He waka eke noa.','Māori whakataukī — a canoe which we are all in, with no exception.'],
+    ['Success is not final, failure is not fatal: it is the courage to continue that counts.','Winston Churchill'],
+    ['Every action you take is a vote for the type of person you wish to become.','James Clear'],
+    ['I’ve failed over and over and over again in my life. And that is why I succeed.','Michael Jordan'],
+    ['Happiness is the object and design of our existence.','Joseph Smith'],
+    ['Whāia te iti kahurangi ki te tūohu koe, me he maunga teitei.','Māori whakataukī — seek the treasure you value most dearly; if you must bow your head, let it be to a lofty mountain.'],
+    ['Although the world is full of suffering, it is full also of the overcoming of it.','Helen Keller'],
+    ['The obstacle in the path becomes the path.','Ryan Holiday, The Obstacle Is the Way'],
+    ['A champion is defined not by their wins but by how they can recover when they fall.','Serena Williams'],
+    ['No other success can compensate for failure in the home.','David O. McKay'],
+    ['Ehara taku toa i te toa takitahi, engari he toa takitini.','Māori whakataukī — my strength is not that of one, but that of many.'],
+    ['You may not control all the events that happen to you, but you can decide not to be reduced by them.','Maya Angelou'],
+    ['Take care of your body. It’s the only place you have to live.','Jim Rohn'],
+    ['Fear is not an option.','Usain Bolt'],
     ['I can do all things through Christ which strengtheneth me.','Philippians 4:13'],
+    ['Titiro whakamuri, kōkiri whakamua.','Māori whakataukī — look back and reflect, so as to go forward.'],
+    ['Your time is limited, so don’t waste it living someone else’s life.','Steve Jobs'],
+    ['You are in danger of living a life so comfortable and soft that you will die without ever realising your true potential.','David Goggins'],
+    ['If they humble themselves before me, then will I make weak things become strong unto them.','Ether 12:27'],
+    ['When we are no longer able to change a situation, we are challenged to change ourselves.','Viktor Frankl'],
+    ['Don’t stop when you’re tired. Stop when you’re done.','David Goggins'],
     ['Be not weary in well-doing, for out of small things proceedeth that which is great.','Doctrine and Covenants 64:33'],
-    ['No other success can compensate for failure in the home.','David O. McKay']
+    ['It’s not what happens to you, but how you react to it that matters.','Epictetus'],
+    ['Discipline equals freedom.','Jocko Willink'],
+    ['Be strong and of a good courage; be not afraid, for the Lord thy God is with thee whithersoever thou goest.','Joshua 1:9'],
+    ['It does not matter how slowly you go as long as you do not stop.','Confucius'],
+    ['The only easy day was yesterday.','US Navy SEALs, popularised by Jocko Willink'],
+    ['They that wait upon the Lord shall renew their strength; they shall mount up with wings as eagles.','Isaiah 40:31'],
+    ['The ultimate measure of a man is not where he stands in moments of comfort, but where he stands at times of challenge.','Martin Luther King Jr.'],
+    ['You gain strength, courage and confidence by every experience in which you really stop to look fear in the face.','Eleanor Roosevelt'],
+    ['Whether you think you can, or you think you can’t, you’re right.','Henry Ford'],
+    ['A journey of a thousand miles begins with a single step.','Lao Tzu'],
+    ['Where there is hope, there is life.','Anne Frank'],
+    ['Success is to be measured not so much by the position one has reached in life as by the obstacles overcome.','Booker T. Washington']
   ];
   var TIPS = [
     'Aim for a palm of protein at every meal. It keeps you full and protects muscle while you lean down.',
@@ -687,6 +768,10 @@
     document.getElementById('hWeightD').innerHTML = dw>0
       ? ic('i-arrow-dr','ic-s')+' '+dw+'kg'+(goalW?' · goal '+r1(goalW)+'kg':'')
       : (goalW ? 'goal '+r1(goalW)+'kg' : '&nbsp;');
+    var foods=state.today.foods||[];
+    var kcal=Math.round(foods.reduce(function(a,f){return a+f.protein*4+f.carbs*4+f.fats*9;},0));
+    var targetKcal=Math.round((state.profile.protein||0)*4+(state.profile.carbs||0)*4+(state.profile.fats||0)*9);
+    document.getElementById('hFood').innerHTML = kcal+'<small>/'+targetKcal+'</small>';
   }
 
   var weightI=document.getElementById('weight');
@@ -783,7 +868,7 @@
     document.getElementById('goalLabel').textContent='Weight goal: '+r1(goal)+' kg';
     document.getElementById('goalPct').textContent=pct+'%';
     document.getElementById('goalFill').style.width=pct+'%';
-    document.getElementById('goalTip').textContent = pct<=0
+    document.getElementById('recapTip').textContent = pct<=0
       ? 'Log your check-ins daily. Hold protein near '+(state.profile.protein||160)+' g and water at '+(state.profile.water||3)+' L, and you will see the scale move.'
       : 'You are '+pct+'% to your '+r1(goal)+' kg goal. Keep the 6 daily ticks, protein near '+(state.profile.protein||160)+' g, and add one extra walk on rest days.';
     var rc=weekRecap();
@@ -801,7 +886,7 @@
     var g=document.getElementById('grid75'); g.innerHTML=''; var gd=0;
     for(var d=1; d<=75; d++){
       var cell=document.createElement('div'); cell.className='cell';
-      var dt=new Date(2026,6,6); dt.setDate(dt.getDate()+(d-1)); var ds=fmtDate(dt); var rec=m[ds]; var v=rec?rec.done:undefined;
+      var dt=new Date(START); dt.setDate(dt.getDate()+(d-1)); var ds=fmtDate(dt); var rec=m[ds]; var v=rec?rec.done:undefined;
       if(d===curDay) cell.className+=' today';
       if(v>=6){cell.className+=' done'; gd++;}
       else if(v>=1){cell.className+=' partly';}
@@ -834,24 +919,60 @@
     document.getElementById('editModal').style.display='none';
   });
 
-  // crew preview
-  function renderCrew(){
-    var rows=CREWSTATS.slice().sort(function(a,b){return b[1]-a[1] || b[2]-a[2];});
-    var lb=document.getElementById('lbList'); lb.innerHTML='';
-    var totDays=0, inToday=0;
-    CREWSTATS.forEach(function(s){ totDays+=s[1]; if(s[3]>=6) inToday++; });
-    document.getElementById('cToday').innerHTML=inToday+'<small>/7</small>';
-    document.getElementById('cDays').textContent=totDays;
-    rows.forEach(function(s,i){
-      var doneToday=s[3]>=6; var chipBg=doneToday?'var(--green-light)':'var(--bg)'; var chipCol=doneToday?'var(--green-dark)':'var(--muted)';
-      var d=document.createElement('div'); d.className='lb';
-      d.innerHTML='<span class="rk">'+(i+1)+'</span>'
-        +'<span class="ava">'+s[0].charAt(0)+'</span>'
-        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency</small></div>'
-        +'<span class="streak">'+ic('i-flame','ic-s')+s[1]+'</span>'
-        +'<span class="today-chip" style="background:'+chipBg+'; color:'+chipCol+'">'+s[3]+'/6</span>';
-      lb.appendChild(d);
+  // crew: pulse, weekly MVP, and sectioned status groups
+  function crewSections(stats){
+    var crushing=[], steady=[], nudge=[];
+    stats.forEach(function(s){
+      var streak=s[1], weekPct=s[4];
+      if(streak>0 && weekPct>=80) crushing.push(s);
+      else if(streak===0 || weekPct<40) nudge.push(s);
+      else steady.push(s);
     });
+    return {crushing:crushing, steady:steady, nudge:nudge};
+  }
+  function renderCrewSections(stats){
+    var groups = crewSections(stats);
+    var wrap = document.getElementById('crewGroups'); wrap.innerHTML='';
+    function section(title, color, arr){
+      if(!arr.length) return;
+      var sec=document.createElement('div'); sec.className='crewsec';
+      sec.innerHTML='<div class="cshead"><span class="dot" style="background:'+color+'"></span><h3>'+title+'</h3></div>';
+      arr.slice().sort(function(a,b){return b[1]-a[1] || b[4]-a[4];}).forEach(function(s){
+        var row=document.createElement('div'); row.className='crow';
+        var flameClass = s[1]>0 ? 'hot' : 'cool';
+        row.innerHTML='<div class="cava">'+s[0].charAt(0)+'</div>'
+          +'<div class="cnm"><p>'+s[0]+'</p><small>'+s[4]+'% this week</small></div>'
+          +'<span class="cflame '+flameClass+'">'+ic('i-flame')+s[1]+'</span>';
+        sec.appendChild(row);
+      });
+      wrap.appendChild(sec);
+    }
+    section('Crushing it', 'var(--green)', groups.crushing);
+    section('Steady', 'var(--gold)', groups.steady);
+    section('Could use a shout', 'var(--coral)', groups.nudge);
+    if(groups.nudge.length){
+      var n=document.createElement('div'); n.className='nudgecard';
+      n.innerHTML=ic('i-info','ic-s')+'<span><b>Give them a nudge.</b> A quick message in the group goes further than a number ever will.</span>';
+      wrap.appendChild(n);
+    }
+  }
+  function finishCrewRender(stats){
+    var avgPct = stats.length ? Math.round(stats.reduce(function(a,s){return a+s[4];},0)/stats.length) : 0;
+    document.getElementById('pulseNum').textContent = avgPct+'%';
+    document.getElementById('pulseCount').textContent = stats.length;
+    document.getElementById('pulseFill').style.width = avgPct+'%';
+    document.getElementById('pulseMsg').textContent = avgPct>=85 ? 'Best week yet. Keep it up.' : (avgPct>=60 ? 'Solid week. Keep pushing.' : 'Early days. It builds from here.');
+    var mvp = stats.slice().sort(function(a,b){ return b[4]-a[4] || b[1]-a[1]; })[0];
+    var mvpCard=document.getElementById('mvpCard');
+    if(mvp && mvp[4]>0){
+      mvpCard.style.display='flex';
+      document.getElementById('mvpName').textContent = mvp[0].split(' ')[0]+"'s week";
+      document.getElementById('mvpLine').textContent = mvp[4]+'% this week, '+mvp[1]+' day streak. Setting the pace.';
+    } else { mvpCard.style.display='none'; }
+    renderCrewSections(stats);
+  }
+  function renderCrew(){
+    finishCrewRender(CREWSTATS.map(function(s){ return s.slice(); }));
   }
 
   var P=state.profile;
@@ -960,31 +1081,19 @@
     logsRows.forEach(function(l){ if(!byName[l.name]) byName[l.name]={name:l.name, logs:{}}; byName[l.name].logs[l.date]=l; });
     if(!Object.keys(byName).length){ renderCrew(); return; }
     var todayDs = todayStr();
+    var last7=[]; for(var i=0;i<7;i++){ var d0=new Date(); d0.setDate(d0.getDate()-i); last7.push(fmtDate(d0)); }
     var stats = Object.keys(byName).map(function(n){
       var b=byName[n]; var dates=Object.keys(b.logs);
       var totalTicks=dates.reduce(function(a,d){return a+(b.logs[d].done||0);},0);
       var pct = dates.length? Math.round(totalTicks/(dates.length*6)*100) : 0;
+      var weekTicks=0, weekDays=0;
+      last7.forEach(function(ds){ if(b.logs[ds]){ weekTicks+=b.logs[ds].done||0; weekDays++; } });
+      var weekPct = weekDays? Math.round(weekTicks/(weekDays*6)*100) : 0;
       var todayDone=(b.logs[todayDs]&&b.logs[todayDs].done)||0;
-      return [n, computeStreakFor(b.logs), pct, todayDone];
-    });
-    var totDaysAll=0, inToday=0;
-    Object.keys(byName).forEach(function(n){ Object.keys(byName[n].logs).forEach(function(d){ if(byName[n].logs[d].done>=6) totDaysAll++; }); });
-    stats.forEach(function(s){ if(s[3]>=6) inToday++; });
-    document.getElementById('cToday').innerHTML=inToday+'<small>/'+stats.length+'</small>';
-    document.getElementById('cDays').textContent=totDaysAll;
-    var rows=stats.slice().sort(function(a,b){return b[1]-a[1] || b[2]-a[2];});
-    var lb=document.getElementById('lbList'); lb.innerHTML='';
-    rows.forEach(function(s,i){
-      var doneToday=s[3]>=6; var chipBg=doneToday?'var(--green-light)':'var(--bg)'; var chipCol=doneToday?'var(--green-dark)':'var(--muted)';
-      var d=document.createElement('div'); d.className='lb';
-      d.innerHTML='<span class="rk">'+(i+1)+'</span>'
-        +'<span class="ava">'+s[0].charAt(0)+'</span>'
-        +'<div class="nm"><p>'+s[0]+'</p><small>'+s[2]+'% consistency</small></div>'
-        +'<span class="streak">'+ic('i-flame','ic-s')+s[1]+'</span>'
-        +'<span class="today-chip" style="background:'+chipBg+'; color:'+chipCol+'">'+s[3]+'/6</span>';
-      lb.appendChild(d);
+      return [n, computeStreakFor(b.logs), pct, todayDone, weekPct];
     });
     document.getElementById('crewBanner').style.display='none';
+    finishCrewRender(stats);
   }
   function loadCrewReal(){
     if(!sb || !state.groupOk){ renderCrew(); return; }
@@ -1031,7 +1140,7 @@
   document.getElementById('foodList').addEventListener('click', function(e){
     var b=e.target.closest('.fdel'); if(!b) return;
     var i=Number(b.dataset.i);
-    state.today.foods.splice(i,1); upsertHistory(); save(); renderFoodList(); renderFoodTotals(); syncToday();
+    state.today.foods.splice(i,1); upsertHistory(); save(); renderFoodList(); renderFoodTotals(); renderHome(); syncToday();
   });
 
   var fmPer100=null;
@@ -1067,7 +1176,7 @@
     var fats=Number(document.getElementById('fmFats').value)||0;
     if(!state.today.foods) state.today.foods=[];
     state.today.foods.push({name:name, protein:protein, carbs:carbs, fats:fats});
-    upsertHistory(); save(); renderFoodList(); renderFoodTotals(); syncToday();
+    upsertHistory(); save(); renderFoodList(); renderFoodTotals(); renderHome(); syncToday();
     document.getElementById('foodModal').style.display='none';
   });
   document.getElementById('manualAddBtn').addEventListener('click', function(){ openFoodModal('manual'); });
@@ -1111,9 +1220,19 @@
   document.getElementById('helpBtn').addEventListener('click', openHow);
   document.getElementById('howBtn').addEventListener('click', openHow);
   document.getElementById('howGo').addEventListener('click', function(){ document.getElementById('howto').style.display='none'; show('profile'); });
+  document.getElementById('profileBtn').addEventListener('click', function(){ show('profile'); });
+
+  document.querySelectorAll('#dashToggle button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#dashToggle button').forEach(function(x){x.classList.toggle('on', x===b);});
+      var view=b.dataset.view;
+      document.getElementById('dashMe').style.display = view==='me' ? 'block':'none';
+      document.getElementById('dashCrew').style.display = view==='crew' ? 'block':'none';
+      if(view==='crew') loadCrewReal();
+    });
+  });
 
   setCad(P.cadence||'daily'); renderTasks(); renderHome(); renderTimeline(); renderCompare(); renderProgress(); renderCrew(); renderFoodList(); renderFoodTotals();
-  document.querySelector('nav button[data-tab="crew"]').addEventListener('click', loadCrewReal);
 
   // sign-in flow: group code, then pick who you are (first time only), then bring their existing days together
   (function(){
