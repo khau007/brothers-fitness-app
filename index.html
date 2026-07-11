@@ -692,7 +692,10 @@
     var w=state.today.weight, start=Number(state.profile.start)||w;
     document.getElementById('hWeight').innerHTML = r1(w)+'<small>kg</small>';
     var dw = r1(start-w);
-    document.getElementById('hWeightD').innerHTML = dw>0 ? ic('i-arrow-dr','ic-s')+' '+dw+'kg' : '&nbsp;';
+    var goalW = state.profile.goal;
+    document.getElementById('hWeightD').innerHTML = dw>0
+      ? ic('i-arrow-dr','ic-s')+' '+dw+'kg'+(goalW?' · goal '+r1(goalW)+'kg':'')
+      : (goalW ? 'goal '+r1(goalW)+'kg' : '&nbsp;');
     document.getElementById('hWaist').innerHTML = r1(state.today.waist)+'<small>cm</small>';
     document.getElementById('hWaistD').innerHTML = 'goal '+(state.profile.goalWaist||82)+'cm';
   }
